@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI for Healthcare: Interactive Demos</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #2c3e50;
+    margin: 0;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .header {
+    text-align: center;
+    color: white;
+    margin-bottom: 50px;
+  }
+
+  .header h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.3em;
+    font-weight: 700;
+  }
+
+  .header .tagline {
+    font-size: 1.3em;
+    margin-bottom: 1em;
+    opacity: 0.95;
+    font-weight: 500;
+  }
+
+  .header .description {
+    font-size: 1.05em;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.7;
+    opacity: 0.9;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px 30px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+  }
+
+  .demos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+  }
+
+  .demo-card {
+    background: white;
+    border-radius: 16px;
+    padding: 35px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .demo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .demo-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .demo-card:hover::before {
+    opacity: 1;
+  }
+
+  .demo-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+    display: block;
+  }
+
+  .demo-title {
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #1a1a1a;
+  }
+
+  .demo-subtitle {
+    font-size: 0.95em;
+    color: #666;
+    margin-bottom: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .demo-description {
+    color: #495057;
+    line-height: 1.7;
+    margin-bottom: 25px;
+    font-size: 1em;
+  }
+
+  .demo-link {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .demo-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    color: white;
+    opacity: 0.8;
+    font-size: 0.95em;
+  }
+
+  .footer a {
+    color: white;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .header h1 {
+      font-size: 2em;
+    }
+    .header .tagline {
+      font-size: 1.1em;
+    }
+    .demos-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>AI for Healthcare: Interactive Demos</h1>
+    <div class="tagline">Making AI Concepts Accessible for Clinical Audiences</div>
+    <div class="description">
+      I'm a computer science student translating fundamental AI concepts into interactive web experiences for healthcare professionals with little to no AI background. Each demo teaches a critical concept about deploying AI in clinical settings—from how models degrade over time, to why AI and clinicians work better together, to how much data you actually need for reliable predictions.
+    </div>
+  </div>
+
+  <div class="demos-grid">
+    <div class="demo-card">
+      <span class="demo-icon">🔬</span>
+      <div class="demo-subtitle">Temporal Drift</div>
+      <div class="demo-title">When AI Models Go Stale</div>
+      <div class="demo-description">
+        Watch how a sleep apnea detection model's accuracy degrades over 24 months as patients age, medications change, and devices update. Learn why deployment isn't "train once, use forever"—and exactly when retraining is needed.
+      </div>
+      <a href="temporal-drift.html" class="demo-link">Explore Demo →</a>
+    </div>
+
+    <div class="demo-card">
+      <span class="demo-icon">🤝</span>
+      <div class="demo-subtitle">Human-AI Collaboration</div>
+      <div class="demo-title">Better Together Than Alone</div>
+      <div class="demo-description">
+        Compare AI-only, clinician-only, and collaborative autism screening. Discover why AI catches subtle patterns humans miss, while clinicians catch edge cases AI misses—and why combining them achieves 92% accuracy vs 80-82% individually.
+      </div>
+      <a href="human-ai-diagnosis.html" class="demo-link">Explore Demo →</a>
+    </div>
+
+    <div class="demo-card">
+      <span class="demo-icon">📊</span>
+      <div class="demo-subtitle">Sample Size & Confidence</div>
+      <div class="demo-title">How Much Data Is Enough?</div>
+      <div class="demo-description">
+        See how prediction confidence improves as you collect more nights of wearable data. Understand the √n relationship between sample size and uncertainty—and why 7 days of data is dangerously unreliable while 30+ days enables safe clinical decisions.
+      </div>
+      <a href="sample-size.html" class="demo-link">Explore Demo →</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    Built to bridge the gap between computer science and clinical practice.<br>
+    Each demo includes a technical deep-dive section for those who want the mathematical foundations.
+  </div>
+</div>
+
+</body>
+</html>
