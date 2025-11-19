@@ -256,19 +256,118 @@
     background: linear-gradient(to right, #28a745, #ffc107);
     transition: width 0.3s;
   }
+
+  .back-button {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background: #2c3e50;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .back-button:hover {
+    background: #1a252f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  /* Collapsible Section Styling */
+  .collapsible-section {
+    margin: 50px 0;
+  }
+
+  .collapsible-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 18px 24px;
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: left;
+  }
+  .collapsible-toggle:hover {
+    border-color: #3498db;
+    color: #3498db;
+    background: #f8f9fa;
+  }
+
+  .collapsible-arrow {
+    font-size: 1.2em;
+    transition: transform 0.3s;
+    color: #3498db;
+  }
+  .collapsible-arrow.open {
+    transform: rotate(90deg);
+  }
+
+  .collapsible-content {
+    display: none;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 40px;
+    margin-top: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .collapsible-content.visible {
+    display: block;
+  }
+
+  .deep-dive-content h3 {
+    color: #2c3e50;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+  }
+  .deep-dive-content p {
+    margin-bottom: 1.2em;
+    color: #495057;
+    line-height: 1.8;
+  }
+  .deep-dive-content ul {
+    padding-left: 25px;
+    margin-bottom: 1.2em;
+    line-height: 1.7;
+  }
+  .deep-dive-content li {
+    margin-bottom: 8px;
+  }
+
+  .key-takeaway {
+    background: #e8f5e9;
+    padding: 20px 25px;
+    border-left: 5px solid #28a745;
+    border-radius: 8px;
+    margin-top: 30px;
+  }
+
+  .prompt-text {
+    color: #495057;
+    font-size: 0.95em;
+    line-height: 1.8;
+  }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>🤝 Human-AI Collaborative Autism Screening Study</h1>
+  <a href="index.html" class="back-button">← Back to Home</a>
+  <h1>🤝 Human-AI Collaborative Autism Screening</h1>
   <div class="subtitle">
-    <strong>What I'm building:</strong> A comparison tool showing how AI and clinicians catch different types of diagnostic errors when working alone versus together.<br>
-    <strong>What it teaches:</strong> AI excels at pattern detection across thousands of cases; clinicians excel at contextual understanding and edge cases—neither replaces the other.<br>
-    <strong>Why it matters for healthcare:</strong> This demonstrates why "AI replacing doctors" is the wrong question. The right question is: how can they work together to catch cases that either would miss alone?
-    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6; font-size: 0.9em; opacity: 0.8;">
-      Dataset: 60 children (ages 2-5) | AI: Video behavior analysis model | Clinicians: Board-certified developmental pediatricians
-    </div>
+    <strong>What this teaches:</strong> AI and clinicians make different types of diagnostic errors. AI excels at quantitative pattern detection (micro-behaviors in video); clinicians excel at contextual understanding (developmental history, differential diagnosis). Working together catches cases either would miss alone.<br>
+    <strong>Why it matters for healthcare:</strong> This demonstrates why "AI replacing doctors" is the wrong question. Hybrid systems achieve 92% accuracy vs 80-82% for either alone—that 10-15% improvement means hundreds of children get earlier intervention.
   </div>
   
   <div class="control-panel">
@@ -312,13 +411,14 @@
     <div id="detailContent"></div>
   </div>
 
-  <!-- Technical Deep Dive Section -->
-  <div style="max-width: 1300px; margin: 30px auto; background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-top: 4px solid #3498db;">
-    <div style="font-weight: 600; font-size: 1.3em; margin-bottom: 20px; color: #3498db;">
-      🎓 Technical Deep Dive: Human-AI Complementary Intelligence
-    </div>
+  <!-- COLLAPSIBLE: TECHNICAL DEEP DIVE -->
+  <div class="collapsible-section">
+    <button class="collapsible-toggle" onclick="toggleDeepDive()">
+      <span>📚 Technical Deep Dive: Human-AI Complementary Intelligence</span>
+      <span class="collapsible-arrow" id="deepDiveArrow">›</span>
+    </button>
 
-    <div style="line-height: 1.8; color: #495057;">
+    <div class="collapsible-content deep-dive-content" id="deepDiveContent">
       <h3 style="color: #2c3e50; margin-top: 20px;">Why Collaboration Outperforms Individual Approaches</h3>
       <p>
         This demo shows a critical insight: <strong>AI and clinicians make different types of errors</strong>. When errors are uncorrelated, combining predictions yields better performance than either alone. This is the mathematical foundation of <strong>ensemble methods</strong> in machine learning.
@@ -402,10 +502,31 @@
         Breast cancer screening studies show AI + radiologist combinations detect <strong>5-8% more cancers</strong> than radiologists alone, while <strong>reducing false positives by 20-30%</strong>. The pattern is identical: AI catches subtle micro-calcifications; radiologists catch unusual presentations and integrate patient history. This isn't replacing radiologists—it's amplifying their capabilities.
       </p>
 
-      <h3 style="color: #2c3e50; margin-top: 25px;">Key Takeaway</h3>
-      <p style="background: #e8f5e9; padding: 15px; border-left: 5px solid #28a745; border-radius: 5px;">
-        <strong>The goal isn't AI vs humans—it's AI + humans.</strong> This demo proves that complementary intelligence systems catch cases either approach would miss alone. For autism screening, that 10-15% improvement in detection means hundreds of children get earlier intervention, which dramatically improves long-term outcomes.
-      </p>
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> The goal isn't AI vs humans—it's AI + humans. This demo proves that complementary intelligence systems catch cases either approach would miss alone. For autism screening, that 10-15% improvement in detection means hundreds of children get earlier intervention, which dramatically improves long-term outcomes.
+      </div>
+    </div>
+  </div>
+
+  <!-- COLLAPSIBLE: VIEW PROMPT -->
+  <div class="collapsible-section">
+    <button class="collapsible-toggle" onclick="togglePrompt()">
+      <span>📋 View Prompt Used to Generate This Demo</span>
+      <span class="collapsible-arrow" id="promptArrow">›</span>
+    </button>
+
+    <div class="collapsible-content" id="promptContent">
+      <div class="prompt-text">
+        "Create an interactive website (HTML file only) to teach the concept of <strong>human-AI complementary intelligence</strong> in healthcare diagnostics. The tool should teach learners that AI and clinicians make different types of errors, and that hybrid systems combining both achieve better diagnostic performance than either alone.
+        <br><br>
+        The tool should simulate autism screening for 60 children (ages 2-5) using three modes: (1) AI Only - video behavior analysis detecting micro-patterns, (2) Clinician Only - developmental pediatricians using clinical interviews and observations, and (3) Hybrid - combining both approaches. Show that AI achieves ~80% accuracy, clinicians ~82%, but hybrid achieves ~92% by catching cases either would miss alone.
+        <br><br>
+        The visualization should display a grid of case cards that users can click to see detailed AI features (e.g., 'Gaze aversion: 0.31s avg vs typical 1.2s', 'Hand-flapping: 47 episodes detected') and clinician reasoning (e.g., 'Regression: lost 15 words between 18-24 months', 'Family history of ASD'). Include mode toggle buttons to switch between AI Only / Clinician Only / Hybrid views, with metrics showing accuracy/sensitivity/specificity for each mode.
+        <br><br>
+        Keep the interface focused on the core concept: one mode selector, metrics prominently displayed, case cards clearly showing which approach detected each case. Use generous spacing for comfortable reading.
+        <br><br>
+        The key learning: AI catches quantitative micro-behaviors humans miss; clinicians catch contextual factors AI doesn't see. Together they form a complementary system where 1+1>2. This teaches why 'AI replacing doctors' is the wrong framing—hybrid intelligence is the future."
+      </div>
     </div>
   </div>
 </div>
@@ -778,6 +899,20 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
     closeDetail();
   });
 });
+
+function toggleDeepDive() {
+  const content = document.getElementById('deepDiveContent');
+  const arrow = document.getElementById('deepDiveArrow');
+  content.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+function togglePrompt() {
+  const content = document.getElementById('promptContent');
+  const arrow = document.getElementById('promptArrow');
+  content.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
 
 initCases();
 </script>

@@ -7,144 +7,116 @@
 <style>
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f5f7fa;
+    background: #f7f8fa;
     color: #2c3e50;
     margin: 0;
-    padding: 20px;
+    padding: 40px 20px 80px;
+    line-height: 1.7;
   }
   .container {
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
   }
-  h1 { 
-    font-size: 1.6em; 
-    margin-bottom: 0.3em;
+  h1 {
+    font-size: 1.8em;
+    margin-bottom: 0.5em;
     color: #1a1a1a;
+    line-height: 1.3;
   }
   .subtitle {
     color: #666;
-    font-size: 0.95em;
-    margin-bottom: 30px;
+    font-size: 1em;
+    margin-bottom: 50px;
+    line-height: 1.8;
   }
-  
-  .dashboard {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
+  .subtitle strong {
+    color: #2c3e50;
   }
-  
+
   .card {
     background: white;
     border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 40px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
   }
-  
+
   .card-header {
     font-weight: 600;
-    font-size: 1.1em;
-    margin-bottom: 20px;
+    font-size: 1.2em;
+    margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: #1a1a1a;
   }
-  
+
+  .section-description {
+    color: #666;
+    font-size: 0.95em;
+    margin-bottom: 25px;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
   .badge {
-    font-size: 0.75em;
-    padding: 4px 10px;
+    font-size: 0.7em;
+    padding: 6px 14px;
     border-radius: 12px;
     font-weight: 500;
   }
   .badge.deployed { background: #e3f2fd; color: #1976d2; }
   .badge.warning { background: #fff3e0; color: #f57c00; }
   .badge.critical { background: #ffebee; color: #c62828; }
-  
+
   #performanceChart {
     height: 280px;
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
-  
+
   #monthControl {
     width: 100%;
-    margin: 20px 0;
+    margin: 30px 0;
   }
-  
+
   .month-label {
     display: flex;
     justify-content: space-between;
     font-size: 0.9em;
     color: #666;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
-  
-  .metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-top: 20px;
+
+  .accuracy-display {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    margin: 30px 0;
   }
-  
-  .metric-item {
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #dee2e6;
-  }
-  .metric-item.good { border-left-color: #28a745; }
-  .metric-item.warning { border-left-color: #ffc107; }
-  .metric-item.bad { border-left-color: #dc3545; }
-  
-  .metric-value {
-    font-size: 1.8em;
+
+  .accuracy-value {
+    font-size: 3.5em;
     font-weight: bold;
-    color: #2c3e50;
+    margin: 10px 0;
   }
-  .metric-label {
-    font-size: 0.85em;
-    color: #6c757d;
-    margin-top: 4px;
+
+  .accuracy-label {
+    font-size: 1.1em;
+    opacity: 0.9;
   }
-  
-  .patient-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9em;
-    margin-top: 15px;
-  }
-  .patient-table th {
-    text-align: left;
-    padding: 10px;
-    background: #f8f9fa;
-    font-weight: 600;
-    border-bottom: 2px solid #dee2e6;
-  }
-  .patient-table td {
-    padding: 10px;
-    border-bottom: 1px solid #e9ecef;
-  }
-  .patient-table tr:hover {
-    background: #f8f9fa;
-  }
-  
-  .prediction-badge {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.85em;
-    font-weight: 500;
-  }
-  .correct { background: #d4edda; color: #155724; }
-  .incorrect { background: #f8d7da; color: #721c24; }
-  
+
   .alert-box {
-    padding: 15px 20px;
-    border-radius: 8px;
-    margin-top: 20px;
+    padding: 20px 24px;
+    border-radius: 10px;
+    margin-top: 30px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
     font-size: 0.95em;
+    line-height: 1.6;
   }
   .alert-box.warning {
     background: #fff3cd;
@@ -156,207 +128,367 @@
     border: 1px solid #dc3545;
     color: #721c24;
   }
-  
+
+  /* Collapsible Section Styling */
+  .collapsible-section {
+    margin: 50px 0;
+  }
+
+  .collapsible-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 18px 24px;
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: left;
+  }
+  .collapsible-toggle:hover {
+    border-color: #667eea;
+    color: #667eea;
+    background: #f8f9fa;
+  }
+
+  .collapsible-arrow {
+    font-size: 1.2em;
+    transition: transform 0.3s;
+    color: #667eea;
+  }
+  .collapsible-arrow.open {
+    transform: rotate(90deg);
+  }
+
+  .collapsible-content {
+    display: none;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 40px;
+    margin-top: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .collapsible-content.visible {
+    display: block;
+  }
+
+  /* Detailed Analysis Layout */
+  .analysis-layout {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 25px;
+    margin-bottom: 40px;
+  }
+
+  .analysis-panel {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+  }
+
+  .panel-title {
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+
+  #detailedChart {
+    height: 280px;
+    position: relative;
+    margin-bottom: 15px;
+  }
+
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .metric-card {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #dee2e6;
+    text-align: center;
+  }
+  .metric-card.good { border-left-color: #28a745; }
+  .metric-card.warning { border-left-color: #ffc107; }
+  .metric-card.bad { border-left-color: #dc3545; }
+
+  .metric-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  .metric-label {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-top: 8px;
+  }
+
   .drift-factors {
-    margin-top: 20px;
+    margin-top: 30px;
+  }
+  .drift-factors-header {
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    color: #2c3e50;
   }
   .factor-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px;
-    margin: 8px 0;
+    gap: 15px;
+    padding: 18px;
+    margin: 15px 0;
     background: #f8f9fa;
-    border-radius: 6px;
-    font-size: 0.9em;
+    border-radius: 10px;
+    font-size: 0.95em;
+    transition: opacity 0.3s;
   }
   .factor-icon {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2em;
+    font-size: 1.4em;
+    flex-shrink: 0;
   }
-  
+
+  .recommendations {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #e9ecef;
+  }
+  .recommendations-header {
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-size: 1em;
+    color: #2c3e50;
+  }
+
+  .patient-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    margin-top: 20px;
+  }
+  .patient-table th {
+    text-align: left;
+    padding: 14px 12px;
+    background: #f8f9fa;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+  }
+  .patient-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #e9ecef;
+  }
+  .patient-table tr:hover {
+    background: #f8f9fa;
+  }
+
+  .prediction-badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.85em;
+    font-weight: 500;
+  }
+  .correct { background: #d4edda; color: #155724; }
+  .incorrect { background: #f8d7da; color: #721c24; }
+
+  .back-button {
+    display: inline-block;
+    margin-bottom: 30px;
+    padding: 10px 20px;
+    background: #2c3e50;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .back-button:hover {
+    background: #1a252f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
   canvas {
     width: 100%;
     height: 100%;
+  }
+
+  .deep-dive-content h4 {
+    color: #2c3e50;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+  }
+  .deep-dive-content p {
+    margin-bottom: 1.2em;
+    color: #495057;
+  }
+  .deep-dive-content ul {
+    padding-left: 25px;
+    margin-bottom: 1.2em;
+  }
+  .deep-dive-content li {
+    margin-bottom: 8px;
+  }
+
+  .key-takeaway {
+    background: #e8f5e9;
+    padding: 20px 25px;
+    border-left: 5px solid #28a745;
+    border-radius: 8px;
+    margin-top: 30px;
+  }
+
+  .prompt-text {
+    color: #495057;
+    font-size: 0.95em;
+    line-height: 1.8;
   }
 </style>
 </head>
 <body>
 
 <div class="container">
+  <a href="index.html" class="back-button">← Back to Home</a>
+
   <h1>🔬 Wearable Sleep Apnea Detection Model - Drift Monitor</h1>
   <div class="subtitle">
-    <strong>What I'm building:</strong> An interactive monitor showing how AI model accuracy degrades over time as patients age, medications change, and devices update.<br>
-    <strong>What it teaches:</strong> AI models don't stay accurate forever—they "drift" and require ongoing monitoring and periodic retraining.<br>
-    <strong>Why it matters for healthcare:</strong> If you deploy a wearable-based diagnostic model today, this shows exactly when you need to retrain it to maintain safe, reliable predictions.
-    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6; font-size: 0.9em; opacity: 0.8;">
-      Model deployed: January 2024 | Device: Oura Ring Gen 3 | Training cohort: n=2,847 patients
-    </div>
+    <strong>What this teaches:</strong> AI models don't stay accurate forever—they "drift" over time as patients age, medications change, and devices update. This shows exactly when retraining is needed.<br>
+    <strong>Why it matters for healthcare:</strong> A model that's 91% accurate at deployment could be dangerously unreliable 18 months later without intervention.
   </div>
-  
-  <div class="dashboard">
-    <div class="card">
-      <div class="card-header">
-        Model Performance Over Time
-        <span class="badge deployed" id="statusBadge">Deployed</span>
-      </div>
-      
-      <canvas id="performanceChart"></canvas>
-      
-      <div class="month-label">
-        <span>Jan 2024</span>
-        <span id="currentMonth">Jan 2024</span>
-        <span>Dec 2025</span>
-      </div>
-      <input type="range" id="monthControl" min="0" max="24" step="1" value="0">
-      
-      <div class="metrics-grid">
-        <div class="metric-item good" id="accuracyMetric">
-          <div class="metric-value" id="accuracyValue">91.2%</div>
-          <div class="metric-label">Overall Accuracy</div>
-        </div>
-        <div class="metric-item good" id="sensitivityMetric">
-          <div class="metric-value" id="sensitivityValue">88.5%</div>
-          <div class="metric-label">Sensitivity (Recall)</div>
-        </div>
-        <div class="metric-item good" id="specificityMetric">
-          <div class="metric-value" id="specificityValue">93.1%</div>
-          <div class="metric-label">Specificity</div>
-        </div>
-        <div class="metric-item good" id="f1Metric">
-          <div class="metric-value" id="f1Value">0.89</div>
-          <div class="metric-label">F1 Score</div>
-        </div>
-      </div>
-      
-      <div class="alert-box warning" id="alertBox" style="display: none;">
-        <span style="font-size: 1.5em;">⚠️</span>
-        <div id="alertText"></div>
-      </div>
-    </div>
-    
-    <div class="card">
-      <div class="card-header">Drift Factors Detected</div>
-      
-      <div class="drift-factors">
-        <div class="factor-item" id="agingFactor" style="opacity: 0.3;">
-          <div class="factor-icon" style="background: #e3f2fd;">👤</div>
-          <div>
-            <strong>Cohort Aging</strong><br>
-            <span style="color: #666; font-size: 0.85em;">Avg age: <span id="avgAge">48.2</span> years</span>
-          </div>
-        </div>
-        
-        <div class="factor-item" id="medicationFactor" style="opacity: 0.3;">
-          <div class="factor-icon" style="background: #fff3e0;">💊</div>
-          <div>
-            <strong>Medication Changes</strong><br>
-            <span style="color: #666; font-size: 0.85em;"><span id="medChanges">12%</span> started CPAP/meds</span>
-          </div>
-        </div>
-        
-        <div class="factor-item" id="seasonalFactor" style="opacity: 0.3;">
-          <div class="factor-icon" style="background: #e8f5e9;">🌡️</div>
-          <div>
-            <strong>Seasonal Patterns</strong><br>
-            <span style="color: #666; font-size: 0.85em;">Winter sleep disruption</span>
-          </div>
-        </div>
-        
-        <div class="factor-item" id="deviceFactor" style="opacity: 0.3;">
-          <div class="factor-icon" style="background: #f3e5f5;">📱</div>
-          <div>
-            <strong>Firmware Updates</strong><br>
-            <span style="color: #666; font-size: 0.85em;">Sensor calibration drift</span>
-          </div>
-        </div>
-      </div>
-      
-      <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e9ecef;">
-        <div style="font-weight: 600; margin-bottom: 12px; font-size: 0.95em;">Recommended Actions:</div>
-        <div id="recommendations" style="font-size: 0.9em; color: #495057; line-height: 1.6;">
-          ✅ Model performing well<br>
-          📊 Continue monitoring
-        </div>
-      </div>
-    </div>
-  </div>
-  
+
+  <!-- SIMPLE DIAGRAM -->
   <div class="card">
-    <div class="card-header">Sample Patient Predictions (<span id="monthDisplay">Month 0</span>)</div>
-    
-    <table class="patient-table">
-      <thead>
-        <tr>
-          <th>Patient ID</th>
-          <th>Avg HR (bpm)</th>
-          <th>HRV (ms)</th>
-          <th>SpO2 drops/hr</th>
-          <th>Predicted</th>
-          <th>Actual</th>
-          <th>Result</th>
-        </tr>
-      </thead>
-      <tbody id="patientTableBody">
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Technical Deep Dive Section -->
-  <div class="card" style="margin-top: 30px; border-top: 4px solid #3498db;">
-    <div class="card-header" style="font-size: 1.3em; color: #3498db;">
-      🎓 Technical Deep Dive: Understanding Temporal Drift
+    <div class="card-header">
+      Model Performance Over Time
+      <span class="badge deployed" id="statusBadge">Deployed</span>
     </div>
 
-    <div style="line-height: 1.8; color: #495057;">
-      <h3 style="color: #2c3e50; margin-top: 20px;">What Is Temporal Drift?</h3>
+    <canvas id="performanceChart"></canvas>
+
+    <div class="month-label">
+      <span>Jan 2024</span>
+      <span id="currentMonth">Jan 2024</span>
+      <span>Dec 2025</span>
+    </div>
+    <input type="range" id="monthControl" min="0" max="24" step="1" value="0">
+
+    <div class="accuracy-display">
+      <div class="accuracy-label">Current Model Accuracy</div>
+      <div class="accuracy-value" id="accuracyValue">91.2%</div>
+      <div class="accuracy-label" style="font-size: 0.95em; margin-top: 10px;">
+        <span id="monthDisplay">Month 0</span> since deployment
+      </div>
+    </div>
+
+    <div class="alert-box warning" id="alertBox" style="display: none;">
+      <span style="font-size: 1.5em;">⚠️</span>
+      <div id="alertText"></div>
+    </div>
+
+    <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+      <div style="font-weight: 600; font-size: 0.95em; margin-bottom: 15px; color: #2c3e50;">Model Status Legend:</div>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge deployed">Deployed</span>
+          <span style="font-size: 0.9em; color: #666;">Accuracy within 3% of baseline</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge warning">Monitoring</span>
+          <span style="font-size: 0.9em; color: #666;">Accuracy dropped 3-8%</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge critical">Action Required</span>
+          <span style="font-size: 0.9em; color: #666;">Accuracy dropped 8%+, retraining needed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- COLLAPSIBLE: TECHNICAL DEEP DIVE -->
+  <div class="collapsible-section">
+    <button class="collapsible-toggle" onclick="toggleDeepDive()">
+      <span>📚 Technical Deep Dive: Understanding Temporal Drift</span>
+      <span class="collapsible-arrow" id="deepDiveArrow">›</span>
+    </button>
+
+    <div class="collapsible-content deep-dive-content" id="deepDiveContent">
+      <h4>What Is Temporal Drift?</h4>
       <p>
-        <strong>Temporal drift</strong> (also called <strong>model degradation</strong> or <strong>concept drift</strong>) occurs when the statistical properties of the data a model encounters in production differ from the data it was trained on. Unlike a sudden model failure, drift is gradual—accuracy slowly erodes over weeks or months.
+        <strong>Temporal drift</strong> (also called model degradation or concept drift) occurs when the statistical properties of production data differ from training data. Unlike sudden failures, drift is gradual—accuracy erodes over weeks or months.
       </p>
 
-      <h3 style="color: #2c3e50; margin-top: 25px;">Types of Drift</h3>
-      <ul style="padding-left: 25px;">
-        <li><strong>Covariate Shift:</strong> The distribution of input features changes (e.g., patient cohort ages, device sensor characteristics). The relationship between features and outcomes stays the same, but the input space shifts.</li>
-        <li><strong>Concept Drift:</strong> The underlying relationship between inputs and outputs changes (e.g., a medication becomes widely adopted, altering how sleep apnea manifests in wearable data).</li>
-        <li><strong>Label Drift:</strong> The prevalence of outcomes changes (e.g., more patients start CPAP therapy, reducing true positive cases).</li>
+      <p>You might be seeing <strong>combined drift</strong> from multiple sources:</p>
+      <ul>
+        <li><strong>Cohort aging:</strong> Average patient age increases from 48.2 to 50.1 years, changing heart rate and HRV distributions.</li>
+        <li><strong>Medication changes:</strong> 12% of patients start CPAP therapy by month 6, fundamentally altering sleep patterns.</li>
+        <li><strong>Seasonal patterns:</strong> Winter sleep disruption creates temporary drift the model wasn't exposed to.</li>
+        <li><strong>Device updates:</strong> Firmware changes after month 12 subtly shift sensor calibration.</li>
       </ul>
 
-      <h3 style="color: #2c3e50; margin-top: 25px;">Why This Demo Matters</h3>
-      <p>
-        In this simulation, you're seeing <strong>combined drift</strong>:
-      </p>
-      <ul style="padding-left: 25px;">
-        <li><strong>Cohort aging</strong> (covariate shift): The average patient age increases from 48.2 to 50.1 years over 24 months, changing the distribution of heart rate and HRV values.</li>
-        <li><strong>Medication changes</strong> (concept drift): 12% of patients start CPAP or medications by month 6, fundamentally altering their sleep patterns and making historical training data less relevant.</li>
-        <li><strong>Seasonal patterns</strong> (cyclical covariate shift): Winter sleep disruption creates temporary drift that the model wasn't exposed to during spring/summer training.</li>
-        <li><strong>Device updates</strong> (covariate shift): Firmware changes after month 12 alter sensor calibration, subtly shifting all biomarker distributions.</li>
+      <h4>How to Detect Drift in Practice</h4>
+      <ul>
+        <li><strong>Performance Monitoring:</strong> Track accuracy, sensitivity, specificity on held-out test sets. Investigate when metrics drop beyond thresholds.</li>
+        <li><strong>Distribution Monitoring:</strong> Use statistical tests (Kolmogorov-Smirnov, Population Stability Index) to detect when input distributions shift.</li>
+        <li><strong>Prediction Monitoring:</strong> Watch for changes in prediction distributions that deviate from baseline prevalence.</li>
       </ul>
 
-      <h3 style="color: #2c3e50; margin-top: 25px;">How to Detect Drift in Practice</h3>
-      <p><strong>1. Performance Monitoring:</strong> Track accuracy, sensitivity, specificity on a held-out test set or via clinical feedback. If metrics drop beyond acceptable thresholds, investigate.</p>
-      <p><strong>2. Distribution Monitoring:</strong> Use statistical tests (Kolmogorov-Smirnov, Population Stability Index) to detect when input feature distributions shift from training data.</p>
-      <p><strong>3. Prediction Monitoring:</strong> Watch for changes in prediction distributions (e.g., suddenly predicting far more positive cases than baseline prevalence suggests).</p>
+      <h4>Mitigation Strategies</h4>
+      <ul>
+        <li><strong>Scheduled Retraining:</strong> Retrain every N months with recent data. This demo suggests retraining when accuracy drops 3-5% (around month 6-12).</li>
+        <li><strong>Online Learning:</strong> Continuously update with new labeled data (requires robust feedback loops).</li>
+        <li><strong>Drift-Aware Architectures:</strong> Use domain adaptation or models that explicitly account for temporal dynamics.</li>
+      </ul>
 
-      <h3 style="color: #2c3e50; margin-top: 25px;">Mitigation Strategies</h3>
-      <p><strong>Scheduled Retraining:</strong> Retrain the model every N months with recent data. This demo suggests retraining when accuracy drops 3-5% (around month 6-12).</p>
-      <p><strong>Online Learning:</strong> Continuously update the model with new labeled data (requires robust feedback loops).</p>
-      <p><strong>Ensemble Methods:</strong> Train multiple models on different time periods and combine predictions to smooth drift effects.</p>
-      <p><strong>Drift-Aware Architectures:</strong> Use domain adaptation techniques or models that explicitly account for temporal dynamics.</p>
-
-      <h3 style="color: #2c3e50; margin-top: 25px;">Real-World Example</h3>
+      <h4>Real-World Example</h4>
       <p>
-        A study of COVID-19 diagnostic models found that models trained in March 2020 had <strong>30-40% accuracy drops</strong> by September 2020 due to changing virus strains, testing protocols, and patient demographics. Without retraining, these models would have been dangerously unreliable—illustrating why drift monitoring is a <strong>patient safety issue</strong>, not just an ML engineering nicety.
+        COVID-19 diagnostic models trained in March 2020 had <strong>30-40% accuracy drops</strong> by September 2020 due to changing virus strains, testing protocols, and demographics. Without retraining, these models would have been dangerously unreliable.
       </p>
 
-      <h3 style="color: #2c3e50; margin-top: 25px;">Key Takeaway</h3>
-      <p style="background: #e8f5e9; padding: 15px; border-left: 5px solid #28a745; border-radius: 5px;">
-        <strong>Deployment is not the end—it's the beginning.</strong> Every production ML model needs a monitoring and maintenance plan. For healthcare applications, this is especially critical: a model that was 91% accurate at deployment could be dangerously unreliable 18 months later without intervention.
-      </p>
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> Deployment is not the end—it's the beginning. Every production ML model needs monitoring and maintenance. For healthcare applications, a model that was 91% accurate could be dangerously unreliable 18 months later without intervention.
+      </div>
+    </div>
+  </div>
+
+  <!-- COLLAPSIBLE: VIEW PROMPT -->
+  <div class="collapsible-section">
+    <button class="collapsible-toggle" onclick="togglePrompt()">
+      <span>📋 View Prompt Used to Generate This Demo</span>
+      <span class="collapsible-arrow" id="promptArrow">›</span>
+    </button>
+
+    <div class="collapsible-content" id="promptContent">
+      <div class="prompt-text">
+        "Create an interactive website (HTML file only) to teach the concept of <strong>temporal drift</strong> in AI models for healthcare. The tool should teach learners that AI models degrade over time as the real-world data distribution shifts from the training data, and that ongoing monitoring and retraining is essential for safe deployment.
+        <br><br>
+        The tool should simulate a wearable-based sleep apnea detection model deployed in January 2024. Learners should move a time slider from month 0 to month 24 and observe how model accuracy gradually decreases from 91% to around 75% as multiple drift factors accumulate: (1) patient cohort aging, (2) medication/treatment adoption (CPAP therapy), (3) seasonal patterns affecting sleep, and (4) device firmware updates changing sensor calibration.
+        <br><br>
+        The visualization should show a performance line chart over time with a slider control. Display current accuracy prominently, and trigger alert boxes when accuracy drops below thresholds (yellow warning at 3-5% drop, red critical at 8%+ drop).
+        <br><br>
+        Keep the interface focused on the core concept: one slider, one chart, one key metric (accuracy displayed large and clear). Use generous spacing for comfortable reading.
+        <br><br>
+        The key learning: deployment is not the end—models need continuous monitoring and periodic retraining to remain safe and effective in healthcare applications."
+      </div>
     </div>
   </div>
 </div>
@@ -366,28 +498,25 @@ const canvas = document.getElementById('performanceChart');
 const ctx = canvas.getContext('2d');
 const monthControl = document.getElementById('monthControl');
 
-// Set canvas size
 canvas.width = canvas.offsetWidth * window.devicePixelRatio;
 canvas.height = canvas.offsetHeight * window.devicePixelRatio;
 ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 const width = canvas.offsetWidth;
 const height = canvas.offsetHeight;
 
-// Generate realistic performance data with drift
+// Performance data with drift
 const months = Array.from({length: 25}, (_, i) => i);
 const baselineAccuracy = 91.2;
 const baselineSensitivity = 88.5;
 const baselineSpecificity = 93.1;
 
 const performanceData = months.map(m => {
-  // Gradual drift with seasonal variation
   const agingEffect = m * 0.15;
   const medicationEffect = m > 6 ? (m - 6) * 0.12 : 0;
   const seasonalVariation = Math.sin(m / 6 * Math.PI) * 1.2;
   const deviceDrift = m > 12 ? (m - 12) * 0.08 : 0;
-  
   const totalDrift = agingEffect + medicationEffect + deviceDrift;
-  
+
   return {
     month: m,
     accuracy: Math.max(72, baselineAccuracy - totalDrift + seasonalVariation),
@@ -401,26 +530,14 @@ const performanceData = months.map(m => {
   };
 });
 
-// Sample patient data that changes over time
-const basePatients = [
-  { id: 'P001', baseHR: 68, baseHRV: 42, baseSpO2: 2.1, actual: false },
-  { id: 'P047', baseHR: 72, baseHRV: 35, baseSpO2: 8.7, actual: true },
-  { id: 'P103', baseHR: 65, baseHRV: 48, baseSpO2: 1.8, actual: false },
-  { id: 'P156', baseHR: 71, baseHRV: 31, baseSpO2: 12.3, actual: true },
-  { id: 'P289', baseHR: 74, baseHRV: 38, baseSpO2: 5.2, actual: true },
-  { id: 'P334', baseHR: 63, baseHRV: 52, baseSpO2: 1.5, actual: false },
-  { id: 'P421', baseHR: 69, baseHRV: 44, baseSpO2: 3.8, actual: false },
-  { id: 'P512', baseHR: 76, baseHRV: 28, baseSpO2: 15.1, actual: true },
-];
-
 function drawChart(currentMonth) {
   ctx.clearRect(0, 0, width, height);
-  
+
   const padding = { top: 20, right: 20, bottom: 40, left: 50 };
   const plotWidth = width - padding.left - padding.right;
   const plotHeight = height - padding.top - padding.bottom;
-  
-  // Draw grid
+
+  // Grid
   ctx.strokeStyle = '#e9ecef';
   ctx.lineWidth = 1;
   for (let i = 0; i <= 4; i++) {
@@ -430,7 +547,7 @@ function drawChart(currentMonth) {
     ctx.lineTo(padding.left + plotWidth, y);
     ctx.stroke();
   }
-  
+
   // Y-axis labels
   ctx.fillStyle = '#6c757d';
   ctx.font = '11px sans-serif';
@@ -439,8 +556,8 @@ function drawChart(currentMonth) {
     const y = padding.top + (plotHeight / 4) * i;
     ctx.fillText(val + '%', padding.left - 10, y + 4);
   });
-  
-  // Draw accuracy line
+
+  // Accuracy line
   ctx.strokeStyle = '#3498db';
   ctx.lineWidth = 2.5;
   ctx.beginPath();
@@ -451,22 +568,8 @@ function drawChart(currentMonth) {
     else ctx.lineTo(x, y);
   });
   ctx.stroke();
-  
-  // Draw sensitivity line
-  ctx.strokeStyle = '#e74c3c';
-  ctx.lineWidth = 2;
-  ctx.setLineDash([5, 3]);
-  ctx.beginPath();
-  performanceData.forEach((d, i) => {
-    const x = padding.left + (i / 24) * plotWidth;
-    const y = padding.top + plotHeight * (1 - (d.sensitivity - 70) / 25);
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
-  ctx.stroke();
-  ctx.setLineDash([]);
-  
-  // Draw current month marker
+
+  // Current month marker
   const currentX = padding.left + (currentMonth / 24) * plotWidth;
   ctx.strokeStyle = '#495057';
   ctx.lineWidth = 2;
@@ -476,53 +579,33 @@ function drawChart(currentMonth) {
   ctx.lineTo(currentX, padding.top + plotHeight);
   ctx.stroke();
   ctx.setLineDash([]);
-  
+
   // Legend
   ctx.font = '12px sans-serif';
   ctx.fillStyle = '#3498db';
   ctx.fillRect(padding.left, height - 25, 15, 3);
   ctx.fillStyle = '#495057';
   ctx.textAlign = 'left';
-  ctx.fillText('Accuracy', padding.left + 20, height - 20);
-  
-  ctx.fillStyle = '#e74c3c';
-  ctx.fillRect(padding.left + 100, height - 25, 15, 3);
-  ctx.fillStyle = '#495057';
-  ctx.fillText('Sensitivity', padding.left + 120, height - 20);
+  ctx.fillText('Model Accuracy', padding.left + 20, height - 20);
 }
 
 function updateDashboard() {
   const month = parseInt(monthControl.value);
   const data = performanceData[month];
-  
-  // Update month display
+
   const monthNames = ['Jan 2024', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
                       'Jan 2025', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec 2025'];
   document.getElementById('currentMonth').textContent = monthNames[month];
   document.getElementById('monthDisplay').textContent = `Month ${month}`;
-  
-  // Update metrics
+
   document.getElementById('accuracyValue').textContent = data.accuracy.toFixed(1) + '%';
-  document.getElementById('sensitivityValue').textContent = data.sensitivity.toFixed(1) + '%';
-  document.getElementById('specificityValue').textContent = data.specificity.toFixed(1) + '%';
-  document.getElementById('f1Value').textContent = data.f1().toFixed(2);
-  
-  // Update metric colors
+
   const accuracyDrop = baselineAccuracy - data.accuracy;
-  document.getElementById('accuracyMetric').className = 'metric-item ' + 
-    (accuracyDrop < 3 ? 'good' : accuracyDrop < 8 ? 'warning' : 'bad');
-  document.getElementById('sensitivityMetric').className = 'metric-item ' + 
-    (data.sensitivity > 85 ? 'good' : data.sensitivity > 78 ? 'warning' : 'bad');
-  document.getElementById('specificityMetric').className = 'metric-item ' + 
-    (data.specificity > 90 ? 'good' : data.specificity > 83 ? 'warning' : 'bad');
-  document.getElementById('f1Metric').className = 'metric-item ' + 
-    (data.f1() > 0.85 ? 'good' : data.f1() > 0.78 ? 'warning' : 'bad');
-  
-  // Update status badge and alert
+
   const statusBadge = document.getElementById('statusBadge');
   const alertBox = document.getElementById('alertBox');
   const alertText = document.getElementById('alertText');
-  
+
   if (accuracyDrop < 3) {
     statusBadge.className = 'badge deployed';
     statusBadge.textContent = 'Deployed';
@@ -540,68 +623,22 @@ function updateDashboard() {
     alertBox.style.display = 'flex';
     alertText.innerHTML = `<strong>Critical drift:</strong> Accuracy dropped ${accuracyDrop.toFixed(1)}%. Model retraining required immediately.`;
   }
-  
-  // Update drift factors visibility
-  document.getElementById('agingFactor').style.opacity = month > 3 ? 1 : 0.3;
-  document.getElementById('medicationFactor').style.opacity = month > 6 ? 1 : 0.3;
-  document.getElementById('seasonalFactor').style.opacity = (month > 3 && month < 9) || month > 15 ? 1 : 0.3;
-  document.getElementById('deviceFactor').style.opacity = month > 12 ? 1 : 0.3;
-  
-  // Update aging value
-  document.getElementById('avgAge').textContent = (48.2 + month * 0.08).toFixed(1);
-  document.getElementById('medChanges').textContent = Math.min(45, 12 + month * 1.2).toFixed(0) + '%';
-  
-  // Update recommendations
-  const recommendations = document.getElementById('recommendations');
-  if (accuracyDrop < 3) {
-    recommendations.innerHTML = '✅ Model performing well<br>📊 Continue monitoring';
-  } else if (accuracyDrop < 8) {
-    recommendations.innerHTML = '⚠️ Schedule model retraining<br>📈 Collect recent validation data<br>🔍 Analyze prediction errors';
-  } else {
-    recommendations.innerHTML = '🚨 <strong>Immediate retraining required</strong><br>🔄 Retrain with last 6 months data<br>✋ Consider pausing predictions<br>📞 Alert clinical team';
-  }
-  
-  // Update patient table
-  updatePatientTable(month, data);
-  
-  // Redraw chart
+
   drawChart(month);
 }
 
-function updatePatientTable(month, modelData) {
-  const tbody = document.getElementById('patientTableBody');
-  tbody.innerHTML = '';
-  
-  basePatients.forEach(patient => {
-    // Simulate aging and changes
-    const ageDrift = month * 0.5;
-    const hr = Math.round(patient.baseHR + ageDrift * 0.15);
-    const hrv = Math.max(20, Math.round(patient.baseHRV - ageDrift * 0.12));
-    const spo2 = Math.max(0, patient.baseSpO2 + (patient.actual ? ageDrift * 0.08 : -ageDrift * 0.02));
-    
-    // Model prediction (gets worse over time)
-    const threshold = 6.0;
-    const predicted = spo2 >= threshold;
-    
-    // Introduce errors as model drifts
-    const errorRate = (baselineAccuracy - modelData.accuracy) / 100;
-    const introducesError = Math.random() < errorRate;
-    const finalPredicted = introducesError ? !predicted : predicted;
-    
-    const correct = finalPredicted === patient.actual;
-    
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td><strong>${patient.id}</strong></td>
-      <td>${hr}</td>
-      <td>${hrv}</td>
-      <td>${spo2.toFixed(1)}</td>
-      <td><span class="prediction-badge ${finalPredicted ? 'incorrect' : 'correct'}">${finalPredicted ? 'Apnea' : 'Normal'}</span></td>
-      <td><span class="prediction-badge ${patient.actual ? 'incorrect' : 'correct'}">${patient.actual ? 'Apnea' : 'Normal'}</span></td>
-      <td><span class="prediction-badge ${correct ? 'correct' : 'incorrect'}">${correct ? '✓ Correct' : '✗ Error'}</span></td>
-    `;
-    tbody.appendChild(row);
-  });
+function toggleDeepDive() {
+  const content = document.getElementById('deepDiveContent');
+  const arrow = document.getElementById('deepDiveArrow');
+  content.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+function togglePrompt() {
+  const content = document.getElementById('promptContent');
+  const arrow = document.getElementById('promptArrow');
+  content.classList.toggle('visible');
+  arrow.classList.toggle('open');
 }
 
 monthControl.addEventListener('input', updateDashboard);

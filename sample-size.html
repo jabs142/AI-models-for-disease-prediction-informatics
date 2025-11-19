@@ -255,19 +255,118 @@
     font-weight: 600;
     color: #2c3e50;
   }
+
+  .back-button {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background: #2c3e50;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .back-button:hover {
+    background: #1a252f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  /* Collapsible Section Styling */
+  .collapsible-section {
+    margin: 50px 0;
+  }
+
+  .collapsible-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 18px 24px;
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: left;
+  }
+  .collapsible-toggle:hover {
+    border-color: #667eea;
+    color: #667eea;
+    background: #f8f9fa;
+  }
+
+  .collapsible-arrow {
+    font-size: 1.2em;
+    transition: transform 0.3s;
+    color: #667eea;
+  }
+  .collapsible-arrow.open {
+    transform: rotate(90deg);
+  }
+
+  .collapsible-content {
+    display: none;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 40px;
+    margin-top: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .collapsible-content.visible {
+    display: block;
+  }
+
+  .deep-dive-content h3 {
+    color: #2c3e50;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+  }
+  .deep-dive-content p {
+    margin-bottom: 1.2em;
+    color: #495057;
+    line-height: 1.8;
+  }
+  .deep-dive-content ul {
+    padding-left: 25px;
+    margin-bottom: 1.2em;
+    line-height: 1.7;
+  }
+  .deep-dive-content li {
+    margin-bottom: 8px;
+  }
+
+  .key-takeaway {
+    background: #e8f5e9;
+    padding: 20px 25px;
+    border-left: 5px solid #28a745;
+    border-radius: 8px;
+    margin-top: 30px;
+  }
+
+  .prompt-text {
+    color: #495057;
+    font-size: 0.95em;
+    line-height: 1.8;
+  }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>📊 Wearable Sleep Disorder Risk - Data Accumulation Study</h1>
+  <a href="index.html" class="back-button">← Back to Home</a>
+  <h1>📊 Wearable Sleep Disorder Risk - Sample Size & Confidence</h1>
   <div class="subtitle">
-    <strong>What I'm building:</strong> A confidence visualizer showing how prediction uncertainty decreases as more nights of wearable data are collected.<br>
-    <strong>What it teaches:</strong> The fundamental statistical principle that more data points lead to narrower confidence intervals and more reliable predictions.<br>
-    <strong>Why it matters for healthcare:</strong> Answers the critical question: "How many days of smartwatch data do I need before I can trust this health prediction?" Shows the relationship between data quantity and clinical decision-making confidence.
-    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6; font-size: 0.9em; opacity: 0.8;">
-      Patient ID: P-5847 | Device: Oura Ring Gen 3 | Condition: Obstructive Sleep Apnea Risk Assessment
-    </div>
+    <strong>What this teaches:</strong> The fundamental statistical principle that more data points lead to narrower confidence intervals and more reliable predictions—visualized through wearable health data collection over 90 nights.<br>
+    <strong>Why it matters for healthcare:</strong> Answers the critical question: "How many days of smartwatch data do I need before I can trust this health prediction?" A single night shows wild variance; 30+ nights reveal the true signal.
   </div>
   
   <div class="dashboard">
@@ -388,13 +487,14 @@
     </div>
   </div>
 
-  <!-- Technical Deep Dive Section -->
-  <div style="max-width: 1400px; margin: 30px auto; background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-top: 4px solid #667eea;">
-    <div style="font-weight: 600; font-size: 1.3em; margin-bottom: 20px; color: #667eea;">
-      🎓 Technical Deep Dive: Sample Size & Statistical Confidence
-    </div>
+  <!-- COLLAPSIBLE: TECHNICAL DEEP DIVE -->
+  <div class="collapsible-section">
+    <button class="collapsible-toggle" onclick="toggleDeepDive()">
+      <span>📚 Technical Deep Dive: Sample Size & Statistical Confidence</span>
+      <span class="collapsible-arrow" id="deepDiveArrow">›</span>
+    </button>
 
-    <div style="line-height: 1.8; color: #495057;">
+    <div class="collapsible-content deep-dive-content" id="deepDiveContent">
       <h3 style="color: #2c3e50; margin-top: 20px;">The Central Limit Theorem in Action</h3>
       <p>
         This demo visualizes the <strong>Central Limit Theorem (CLT)</strong>—one of statistics' most important principles. The CLT states that as sample size increases, the distribution of sample means approaches a normal distribution, and the <strong>standard error</strong> (uncertainty in our estimate) decreases proportional to the square root of sample size.
@@ -477,10 +577,31 @@
         This concept applies to AI training too: models trained on 100 samples have high variance (overfitting risk); models trained on 10,000 samples generalize better. The same √n relationship governs both <strong>measurement confidence</strong> (this demo) and <strong>model performance confidence</strong>.
       </p>
 
-      <h3 style="color: #2c3e50; margin-top: 25px;">Key Takeaway</h3>
-      <p style="background: #e8f5e9; padding: 15px; border-left: 5px solid #28a745; border-radius: 5px;">
-        <strong>More data = narrower confidence intervals = safer clinical decisions.</strong> When deploying wearable-based diagnostics, always specify the minimum data collection period required for reliable predictions. This demo proves that 7 days is insufficient, 30+ days is recommended, and 90 days provides high precision—but diminishing returns suggest 30-60 days is the practical sweet spot.
-      </p>
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> More data = narrower confidence intervals = safer clinical decisions. When deploying wearable-based diagnostics, always specify the minimum data collection period required for reliable predictions. This demo proves that 7 days is insufficient, 30+ days is recommended, and 90 days provides high precision—but diminishing returns suggest 30-60 days is the practical sweet spot.
+      </div>
+    </div>
+  </div>
+
+  <!-- COLLAPSIBLE: VIEW PROMPT -->
+  <div class="collapsible-section">
+    <button class="collapsible-toggle" onclick="togglePrompt()">
+      <span>📋 View Prompt Used to Generate This Demo</span>
+      <span class="collapsible-arrow" id="promptArrow">›</span>
+    </button>
+
+    <div class="collapsible-content" id="promptContent">
+      <div class="prompt-text">
+        "Create an interactive website (HTML file only) to teach the concept of <strong>sample size and statistical confidence</strong> in wearable health diagnostics. The tool should teach learners that prediction confidence increases (uncertainty decreases) as more data is collected, following the Central Limit Theorem.
+        <br><br>
+        The tool should simulate a patient wearing an Oura Ring for sleep apnea risk assessment over 90 nights. Learners should move a slider from day 1 to day 90 and observe how the 95% confidence interval around the risk score narrows from ±3.2 (very wide/unreliable at 7 days) to ±0.9 (narrow/reliable at 90 days), following the √n relationship (confidence interval shrinks proportional to the square root of sample size).
+        <br><br>
+        The visualization should show a risk score chart over time with a shaded confidence band that narrows as more data accumulates. Display the current risk score (6.4/10) with its confidence interval prominently. Show reliability badges (Low/Moderate/High) based on data collection duration, and provide clinical recommendations (e.g., &lt;14 days = insufficient, 30+ days = reliable for treatment decisions).
+        <br><br>
+        Keep the interface focused on the core concept: one slider, one chart showing the narrowing confidence band, one key metric (risk score with CI displayed large and clear). Use generous spacing for comfortable reading.
+        <br><br>
+        The key learning: one night of wearable data is nearly useless due to noise; 30+ nights reveal the true signal as random fluctuations cancel out. This teaches why sufficient sample size is critical for reliable healthcare predictions."
+      </div>
     </div>
   </div>
 </div>
@@ -733,6 +854,20 @@ function updateTable(days) {
     
     tbody.appendChild(row);
   });
+}
+
+function toggleDeepDive() {
+  const content = document.getElementById('deepDiveContent');
+  const arrow = document.getElementById('deepDiveArrow');
+  content.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+function togglePrompt() {
+  const content = document.getElementById('promptContent');
+  const arrow = document.getElementById('promptArrow');
+  content.classList.toggle('visible');
+  arrow.classList.toggle('open');
 }
 
 daysSlider.addEventListener('input', updateDashboard);
