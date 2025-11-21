@@ -16,23 +16,24 @@
     max-width: 1300px;
     margin: 0 auto;
   }
-  h1 { 
-    font-size: 1.6em; 
-    margin-bottom: 0.3em;
+  h1 {
+    font-size: 1.6em;
+    margin-bottom: 0.4em;
     color: #1a1a1a;
   }
   .subtitle {
     color: #666;
     font-size: 0.95em;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
+    line-height: 1.6;
   }
   
   .control-panel {
     background: white;
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 25px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   }
   
   .mode-selector {
@@ -43,17 +44,17 @@
   }
   .mode-btn {
     flex: 1;
-    padding: 15px 25px;
-    font-size: 1em;
+    padding: 12px 20px;
+    font-size: 0.95em;
     border: 2px solid #3498db;
     background: white;
     color: #3498db;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
     font-weight: 500;
   }
-  .mode-btn:first-child { border-radius: 8px 0 0 8px; }
-  .mode-btn:last-child { border-radius: 0 8px 8px 0; }
+  .mode-btn:first-child { border-radius: 6px 0 0 6px; }
+  .mode-btn:last-child { border-radius: 0 6px 6px 0; }
   .mode-btn.active {
     background: #3498db;
     color: white;
@@ -66,21 +67,21 @@
     flex-wrap: wrap;
   }
   .metric-card {
-    padding: 20px 35px;
+    padding: 18px 30px;
     background: #f8f9fa;
-    border-radius: 10px;
+    border-radius: 8px;
     text-align: center;
-    min-width: 140px;
+    min-width: 120px;
   }
   .metric-number {
-    font-size: 2.5em;
+    font-size: 2.2em;
     font-weight: bold;
     color: #2c3e50;
   }
   .metric-label {
-    font-size: 0.9em;
+    font-size: 0.85em;
     color: #666;
-    margin-top: 5px;
+    margin-top: 6px;
   }
   
   .cases-grid {
@@ -92,20 +93,20 @@
   
   .case-card {
     background: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
     border: 2px solid transparent;
   }
   .case-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
   }
   .case-card.selected {
     border-color: #3498db;
-    box-shadow: 0 4px 16px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 3px 10px rgba(52, 152, 219, 0.25);
   }
   .case-card.correct {
     border-left: 5px solid #28a745;
@@ -158,9 +159,9 @@
   
   .detail-panel {
     background: white;
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     display: none;
   }
   .detail-panel.show {
@@ -259,26 +260,23 @@
 
   .back-button {
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     padding: 10px 20px;
-    background: #2c3e50;
+    background: #3498db;
     color: white;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 6px;
     font-size: 0.9em;
     font-weight: 500;
-    transition: all 0.3s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: background 0.2s;
   }
   .back-button:hover {
-    background: #1a252f;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    background: #2980b9;
   }
 
   /* Collapsible Section Styling */
   .collapsible-section {
-    margin: 50px 0;
+    margin: 40px 0;
   }
 
   .collapsible-toggle {
@@ -286,15 +284,15 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 18px 24px;
+    padding: 15px 20px;
     background: white;
-    border: 2px solid #dee2e6;
-    border-radius: 12px;
-    font-size: 1em;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95em;
     font-weight: 600;
     color: #495057;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
     text-align: left;
   }
   .collapsible-toggle:hover {
@@ -304,8 +302,8 @@
   }
 
   .collapsible-arrow {
-    font-size: 1.2em;
-    transition: transform 0.3s;
+    font-size: 1.1em;
+    transition: transform 0.2s;
     color: #3498db;
   }
   .collapsible-arrow.open {
@@ -315,11 +313,11 @@
   .collapsible-content {
     display: none;
     background: white;
-    border: 1px solid #dee2e6;
-    border-radius: 12px;
-    padding: 40px;
-    margin-top: 15px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+    margin-top: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   }
   .collapsible-content.visible {
     display: block;
@@ -364,10 +362,10 @@
 
 <div class="container">
   <a href="index.html" class="back-button">← Back to Home</a>
-  <h1>🤝 Human-AI Collaborative Autism Screening</h1>
+  <h1>🤝 Human-AI Collaboration in Diagnosis</h1>
   <div class="subtitle">
-    <strong>What this teaches:</strong> AI and clinicians make different types of diagnostic errors. AI excels at quantitative pattern detection (micro-behaviors in video); clinicians excel at contextual understanding (developmental history, differential diagnosis). Working together catches cases either would miss alone.<br>
-    <strong>Why it matters for healthcare:</strong> This demonstrates why "AI replacing doctors" is the wrong question. Hybrid systems achieve 92% accuracy vs 80-82% for either alone—that 10-15% improvement means hundreds of children get earlier intervention.
+    <strong>What this teaches:</strong> AI and clinicians catch different types of diagnostic errors. Together they achieve better results than either alone.<br>
+    <strong>Why it matters:</strong> Hybrid systems achieve 92% accuracy vs. 80-82% individually. This improvement enables better patient outcomes.
   </div>
   
   <div class="control-panel">
@@ -378,25 +376,17 @@
     </div>
     
     <div class="metrics-row">
-      <div class="metric-card">
-        <div class="metric-number" id="correctCount">48</div>
-        <div class="metric-label">Correct Diagnoses</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-number" id="missedCount">12</div>
-        <div class="metric-label">Missed Cases</div>
-      </div>
       <div class="metric-card" style="background: #e8f5e9;">
         <div class="metric-number" id="accuracyPercent" style="color: #28a745;">80%</div>
         <div class="metric-label">Diagnostic Accuracy</div>
       </div>
       <div class="metric-card">
-        <div class="metric-number" id="sensitivityPercent">75%</div>
-        <div class="metric-label">Sensitivity</div>
+        <div class="metric-number" id="correctCount">48</div>
+        <div class="metric-label">Correct</div>
       </div>
       <div class="metric-card">
-        <div class="metric-number" id="specificityPercent">84%</div>
-        <div class="metric-label">Specificity</div>
+        <div class="metric-number" id="missedCount">12</div>
+        <div class="metric-label">Missed</div>
       </div>
     </div>
   </div>
@@ -430,48 +420,38 @@
           <tr style="border-bottom: 2px solid #dee2e6;">
             <th style="text-align: left; padding: 10px;">Mode</th>
             <th style="text-align: center; padding: 10px;">Accuracy</th>
-            <th style="text-align: center; padding: 10px;">Sensitivity</th>
-            <th style="text-align: center; padding: 10px;">Specificity</th>
             <th style="text-align: left; padding: 10px;">Key Strength</th>
           </tr>
           <tr>
             <td style="padding: 10px;"><strong>AI Only</strong></td>
-            <td style="text-align: center; padding: 10px;">80%</td>
             <td style="text-align: center; padding: 10px;">75%</td>
-            <td style="text-align: center; padding: 10px;">84%</td>
-            <td style="padding: 10px;">Pattern detection in video data</td>
+            <td style="padding: 10px;">Detects subtle behavioral patterns</td>
           </tr>
           <tr style="background: #f8f9fa;">
             <td style="padding: 10px;"><strong>Clinician Only</strong></td>
-            <td style="text-align: center; padding: 10px;">82%</td>
             <td style="text-align: center; padding: 10px;">75%</td>
-            <td style="text-align: center; padding: 10px;">88%</td>
-            <td style="padding: 10px;">Contextual knowledge & history</td>
+            <td style="padding: 10px;">Uses clinical context and history</td>
           </tr>
           <tr>
             <td style="padding: 10px;"><strong>Hybrid (AI + Clinician)</strong></td>
-            <td style="text-align: center; padding: 10px;"><strong style="color: #28a745;">92%</strong></td>
-            <td style="text-align: center; padding: 10px;"><strong style="color: #28a745;">92%</strong></td>
-            <td style="text-align: center; padding: 10px;"><strong style="color: #28a745;">91%</strong></td>
-            <td style="padding: 10px;">Catches cases either would miss</td>
+            <td style="text-align: center; padding: 10px;"><strong style="color: #28a745;">88%</strong></td>
+            <td style="padding: 10px;">Combines both approaches</td>
           </tr>
         </table>
       </div>
 
       <h3 style="color: #2c3e50; margin-top: 25px;">What AI Catches That Clinicians Miss</h3>
       <ul style="padding-left: 25px;">
-        <li><strong>Micro-behaviors:</strong> AI detects 0.3-second toe-walking episodes or 23 occurrences of subtle motor patterns that humans can't reliably track in real-time video.</li>
-        <li><strong>Quantitative precision:</strong> "Gaze duration: 0.31s vs typical 1.2s" is measurable by AI but hard for humans to estimate accurately without slow-motion replay.</li>
-        <li><strong>Consistency across cases:</strong> AI applies the exact same detection criteria to all 60 children, avoiding clinician fatigue or recency bias.</li>
-        <li><strong>Subtle patterns:</strong> Prosody analysis (0.23 Hz pitch variation vs 1.1 Hz typical) requires signal processing beyond human auditory perception.</li>
+        <li><strong>Micro-behaviors:</strong> Detects subtle motor patterns and brief behavioral episodes</li>
+        <li><strong>Quantitative precision:</strong> Measures exact gaze duration and speech patterns</li>
+        <li><strong>Consistency:</strong> Applies same criteria to every case without fatigue</li>
       </ul>
 
       <h3 style="color: #2c3e50; margin-top: 25px;">What Clinicians Catch That AI Misses</h3>
       <ul style="padding-left: 25px;">
-        <li><strong>Contextual knowledge:</strong> Clinicians recognize "regression: lost 15 words between 18-24 months" from parent interviews—AI only sees the current video snapshot.</li>
-        <li><strong>Differential diagnosis:</strong> Distinguishing ADHD hyperactivity from ASD stereotypy, or anxiety from social avoidance, requires medical training AI doesn't possess.</li>
-        <li><strong>Compensatory behaviors:</strong> High-IQ children with autism often mask symptoms through learned social scripts—clinicians recognize this; video analysis doesn't.</li>
-        <li><strong>Multi-source integration:</strong> Clinicians synthesize parent reports, daycare observations, M-CHAT scores, and in-person interaction—far beyond video-only data.</li>
+        <li><strong>Developmental history:</strong> Recognizes regression and changes over time</li>
+        <li><strong>Differential diagnosis:</strong> Distinguishes similar conditions like ADHD or anxiety</li>
+        <li><strong>Contextual understanding:</strong> Integrates parent reports and multi-source observations</li>
       </ul>
 
       <h3 style="color: #2c3e50; margin-top: 25px;">Types of Cases by Detection Pattern</h3>
@@ -536,170 +516,98 @@ const casesData = [
   {
     id: 'C001', age: '3y 2m', gender: 'M', actual: true, detected: 'both',
     aiFeatures: [
-      { name: 'Gaze aversion', value: 'Detected 0.31s avg gaze duration (typical: 1.2s)', confidence: 94 },
-      { name: 'Repetitive behaviors', value: '47 hand-flapping episodes in 10min video', confidence: 91 },
-      { name: 'Facial affect', value: 'Limited emotional expression detected (12% of frames)', confidence: 87 }
+      { name: 'Gaze aversion', value: 'Limited eye contact during interactions' },
+      { name: 'Repetitive behaviors', value: 'Frequent hand-flapping episodes' }
     ],
     clinicianFeatures: [
-      { name: 'Social reciprocity', value: 'Minimal response to name-calling (2/10 attempts)' },
-      { name: 'Language delay', value: 'Uses <10 words, no phrase speech at 38 months' },
-      { name: 'Family history', value: 'Older sibling diagnosed with ASD' }
+      { name: 'Social reciprocity', value: 'Minimal response to name-calling' },
+      { name: 'Language delay', value: 'Uses fewer than 10 words at 38 months' }
     ],
     aiConfidence: 92, clinicianConfidence: 88
   },
   {
     id: 'C002', age: '4y 8m', gender: 'F', actual: false, detected: 'both',
     aiFeatures: [
-      { name: 'Gaze patterns', value: 'Normal eye contact duration (1.4s average)', confidence: 88 },
-      { name: 'Social engagement', value: 'Responsive to social cues in 85% of interactions', confidence: 90 },
-      { name: 'Motor patterns', value: 'No stereotyped movements detected', confidence: 86 }
+      { name: 'Gaze patterns', value: 'Normal eye contact' },
+      { name: 'Social engagement', value: 'Responsive to social cues' }
     ],
     clinicianFeatures: [
-      { name: 'Social reciprocity', value: 'Age-appropriate social engagement, takes turns in play' },
-      { name: 'Communication', value: 'Uses complex sentences, asks questions appropriately' },
-      { name: 'Play behavior', value: 'Engages in pretend play, shares toys with peers' }
+      { name: 'Social reciprocity', value: 'Age-appropriate social engagement' },
+      { name: 'Communication', value: 'Uses complex sentences appropriately' }
     ],
     aiConfidence: 88, clinicianConfidence: 92
   },
   {
     id: 'C003', age: '2y 11m', gender: 'M', actual: true, detected: 'ai-only',
     aiFeatures: [
-      { name: 'Micro-behaviors', value: 'Detected subtle toe-walking (0.3s episodes, 23 occurrences)', confidence: 89 },
-      { name: 'Visual attention', value: 'Preference for peripheral vision (68% of tracking)', confidence: 85 },
-      { name: 'Response latency', value: 'Delayed orienting to sounds (avg 2.8s vs typical 0.7s)', confidence: 82 }
+      { name: 'Micro-behaviors', value: 'Detected subtle toe-walking patterns' },
+      { name: 'Visual attention', value: 'Preference for peripheral vision' }
     ],
     clinicianFeatures: [
-      { name: 'Borderline presentation', value: 'Subtle signs; clinician initially rated as "monitor"' },
-      { name: 'Verbal skills', value: 'Language development appears on track for age' },
-      { name: 'Social behaviors', value: 'Some eye contact present, making initial diagnosis unclear' }
+      { name: 'Borderline presentation', value: 'Subtle signs, rated as "monitor"' },
+      { name: 'Verbal skills', value: 'Language development on track' }
     ],
     aiConfidence: 85, clinicianConfidence: 45
   },
   {
     id: 'C004', age: '3y 5m', gender: 'F', actual: true, detected: 'human-only',
     aiFeatures: [
-      { name: 'Masking behaviors', value: 'Gaze metrics within normal range during structured tasks', confidence: 52 },
-      { name: 'Social mimicry', value: 'Compensatory behaviors reduced AI detection confidence', confidence: 48 },
-      { name: 'Model limitation', value: 'Video-based model missed contextual social deficits', confidence: 41 }
+      { name: 'Masking behaviors', value: 'Gaze metrics within normal range' },
+      { name: 'Model limitation', value: 'Video missed contextual deficits' }
     ],
     clinicianFeatures: [
-      { name: 'Clinical context', value: 'Regression: Lost 15 words between 18-24 months' },
-      { name: 'Parent report', value: 'Marked social withdrawal noted by family, not captured in clinical video' },
-      { name: 'Diagnostic expertise', value: 'Pattern recognition from 15+ years experience with subtle presentations' }
+      { name: 'Regression history', value: 'Lost 15 words between 18-24 months' },
+      { name: 'Parent report', value: 'Social withdrawal not visible on video' }
     ],
     aiConfidence: 47, clinicianConfidence: 82
   },
   {
     id: 'C005', age: '4y 1m', gender: 'M', actual: true, detected: 'both',
     aiFeatures: [
-      { name: 'Restricted interests', value: 'Visual fixation on spinning objects (89% of video time)', confidence: 96 },
-      { name: 'Sensory patterns', value: 'Repetitive tactile-seeking behaviors (rubbing surfaces 124 times)', confidence: 93 },
-      { name: 'Social disengagement', value: 'No joint attention attempts detected in 10-minute session', confidence: 91 }
+      { name: 'Restricted interests', value: 'Fixation on spinning objects' },
+      { name: 'Social disengagement', value: 'No joint attention attempts' }
     ],
     clinicianFeatures: [
-      { name: 'Clear presentation', value: 'Multiple domains affected: social, communication, restricted interests' },
-      { name: 'ADOS-2 score', value: 'Exceeded diagnostic cutoff (comparison score: 8, cutoff: 7)' },
-      { name: 'Developmental history', value: 'Consistent reports across multiple settings (home, daycare)' }
+      { name: 'Clear presentation', value: 'Multiple domains affected' },
+      { name: 'Assessment scores', value: 'Exceeded diagnostic cutoff' }
     ],
     aiConfidence: 94, clinicianConfidence: 95
   },
   {
     id: 'C006', age: '3y 9m', gender: 'M', actual: false, detected: 'human-only',
     aiFeatures: [
-      { name: 'False positive triggers', value: 'Shyness interpreted as social avoidance by model', confidence: 68 },
-      { name: 'Anxiety behaviors', value: 'Hand-wringing during assessment flagged as stereotypy', confidence: 71 },
-      { name: 'Context limitation', value: 'Model lacks ability to differentiate anxiety from ASD', confidence: 65 }
+      { name: 'False positive', value: 'Shyness misinterpreted as avoidance' },
+      { name: 'Anxiety behaviors', value: 'Hand-wringing flagged incorrectly' }
     ],
     clinicianFeatures: [
-      { name: 'Situational context', value: 'Child warmed up after 20 minutes, showed typical engagement' },
-      { name: 'Differential diagnosis', value: 'Behaviors consistent with separation anxiety, not ASD' },
-      { name: 'Developmental milestones', value: 'All communication/social milestones met on time' }
+      { name: 'Situational context', value: 'Child warmed up after 20 minutes' },
+      { name: 'Differential diagnosis', value: 'Separation anxiety, not ASD' }
     ],
     aiConfidence: 68, clinicianConfidence: 15
   },
   {
     id: 'C007', age: '2y 8m', gender: 'F', actual: false, detected: 'both',
     aiFeatures: [
-      { name: 'Typical behaviors', value: 'Joint attention present in 92% of opportunities', confidence: 90 },
-      { name: 'Communication', value: 'Appropriate gesture use and vocal variety detected', confidence: 88 },
-      { name: 'Social interest', value: 'Initiated interactions with examiner 14 times', confidence: 86 }
+      { name: 'Typical behaviors', value: 'Joint attention present' },
+      { name: 'Social interest', value: 'Initiated interactions frequently' }
     ],
     clinicianFeatures: [
-      { name: 'Social communication', value: 'Strong back-and-forth interaction, shares enjoyment' },
-      { name: 'Play skills', value: 'Functional and symbolic play both present' },
-      { name: 'Parent concern', value: 'Screened due to family history, but no ASD indicators present' }
+      { name: 'Social communication', value: 'Strong interaction, shares enjoyment' },
+      { name: 'Play skills', value: 'Engages in pretend play' }
     ],
     aiConfidence: 88, clinicianConfidence: 93
   },
   {
     id: 'C008', age: '4y 3m', gender: 'M', actual: true, detected: 'ai-only',
     aiFeatures: [
-      { name: 'Prosody analysis', value: 'Monotone speech detected: 0.23 Hz pitch variation (typical: 1.1 Hz)', confidence: 87 },
-      { name: 'Facial micro-expressions', value: 'Reduced emotional range: detected only 3/7 basic emotions', confidence: 84 },
-      { name: 'Movement dynamics', value: 'Atypical gait pattern: 15° inward rotation detected', confidence: 81 }
+      { name: 'Speech patterns', value: 'Monotone speech detected' },
+      { name: 'Emotional range', value: 'Limited facial expressions' }
     ],
     clinicianFeatures: [
-      { name: 'Verbal abilities', value: 'Strong language skills masked social deficits initially' },
-      { name: 'Compensatory strategies', value: 'High IQ led to learned social scripts' },
-      { name: 'Brief assessment', value: 'Limited observation time (15min) missed subtle signs' }
+      { name: 'Verbal abilities', value: 'Strong language masked deficits' },
+      { name: 'Brief assessment', value: 'Limited observation time' }
     ],
     aiConfidence: 84, clinicianConfidence: 52
-  },
-  {
-    id: 'C009', age: '3y 4m', gender: 'F', actual: false, detected: 'neither',
-    aiFeatures: [
-      { name: 'Ambiguous signals', value: 'Mixed indicators: some atypical eye contact, but good social interest', confidence: 58 },
-      { name: 'Model uncertainty', value: 'Confidence threshold not met (58% vs 75% required)', confidence: 58 },
-      { name: 'Video quality', value: 'Suboptimal lighting affected face tracking accuracy', confidence: 51 }
-    ],
-    clinicianFeatures: [
-      { name: 'Borderline case', value: 'Some repetitive behaviors but strong social motivation' },
-      { name: 'Diagnostic uncertainty', value: 'Clinician recommended follow-up assessment in 6 months' },
-      { name: 'Sensory issues', value: 'Sensory seeking behaviors without other ASD criteria' }
-    ],
-    aiConfidence: 58, clinicianConfidence: 48
-  },
-  {
-    id: 'C010', age: '2y 10m', gender: 'M', actual: true, detected: 'human-only',
-    aiFeatures: [
-      { name: 'Video artifacts', value: 'Child moved off-camera frequently, reducing trackable time', confidence: 44 },
-      { name: 'Limited data', value: 'Only 4.2 minutes of analyzable video out of 10-minute session', confidence: 39 },
-      { name: 'Model gaps', value: 'Insufficient data for reliable prediction (minimum: 7 min)', confidence: 38 }
-    ],
-    clinicianFeatures: [
-      { name: 'Clinical interview', value: 'Parent reports revealed clear regression and repetitive behaviors' },
-      { name: 'Direct observation', value: 'In-person assessment captured behaviors not visible on video' },
-      { name: 'Multi-source data', value: 'Daycare reports and M-CHAT scores supported diagnosis' }
-    ],
-    aiConfidence: 40, clinicianConfidence: 87
-  },
-  {
-    id: 'C011', age: '4y 6m', gender: 'M', actual: false, detected: 'ai-only',
-    aiFeatures: [
-      { name: 'ADHD overlap', value: 'Reduced sustained attention flagged as social disinterest', confidence: 73 },
-      { name: 'Hyperactivity patterns', value: 'Frequent movement misclassified as stereotyped behavior', confidence: 70 },
-      { name: 'Model confusion', value: 'ADHD symptoms mimic some ASD features in video analysis', confidence: 69 }
-    ],
-    clinicianFeatures: [
-      { name: 'Differential diagnosis', value: 'Recognized ADHD presentation vs ASD' },
-      { name: 'Social reciprocity', value: 'When engaged, showed appropriate social responses' },
-      { name: 'Diagnostic expertise', value: 'Able to distinguish attention issues from social deficits' }
-    ],
-    aiConfidence: 71, clinicianConfidence: 22
-  },
-  {
-    id: 'C012', age: '3y 7m', gender: 'F', actual: true, detected: 'both',
-    aiFeatures: [
-      { name: 'Vocal patterns', value: 'Echolalia detected in 64% of utterances', confidence: 92 },
-      { name: 'Social gaze', value: 'Limited eye contact: 0.18s per interaction (typical: 1.5s)', confidence: 89 },
-      { name: 'Behavioral rigidity', value: 'Distress when routine altered (5 instances of dysregulation)', confidence: 86 }
-    ],
-    clinicianFeatures: [
-      { name: 'Communication deficits', value: 'Non-functional language, immediate and delayed echolalia' },
-      { name: 'Restricted interests', value: 'Intense focus on weather patterns, resists topic changes' },
-      { name: 'Sensory issues', value: 'Covers ears frequently, seeks deep pressure' }
-    ],
-    aiConfidence: 89, clinicianConfidence: 91
   }
 ];
 
@@ -799,14 +707,10 @@ function updateMetrics() {
   const total = casesData.length;
   const missed = total - correct;
   const accuracy = (correct / total * 100).toFixed(0);
-  const sensitivity = truePositives / (truePositives + falseNegatives) * 100;
-  const specificity = trueNegatives / (trueNegatives + falsePositives) * 100;
-  
+
   document.getElementById('correctCount').textContent = correct;
   document.getElementById('missedCount').textContent = missed;
   document.getElementById('accuracyPercent').textContent = accuracy + '%';
-  document.getElementById('sensitivityPercent').textContent = sensitivity.toFixed(0) + '%';
-  document.getElementById('specificityPercent').textContent = specificity.toFixed(0) + '%';
 }
 
 function getPrediction(caseData, mode) {
@@ -829,16 +733,13 @@ function showDetail(caseData) {
   
   const aiFeaturesList = caseData.aiFeatures.map(f => `
     <li>
-      <strong>${f.name}</strong>
-      ${f.value}
-      ${f.confidence ? `<div style="margin-top:5px; font-size:0.85em; color:#666;">Confidence: ${f.confidence}%</div>` : ''}
+      <strong>${f.name}:</strong> ${f.value}
     </li>
   `).join('');
   
   const clinicianFeaturesList = caseData.clinicianFeatures.map(f => `
     <li>
-      <strong>${f.name}</strong>
-      ${f.value}
+      <strong>${f.name}:</strong> ${f.value}
     </li>
   `).join('');
   

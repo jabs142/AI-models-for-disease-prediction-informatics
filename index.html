@@ -7,10 +7,10 @@
 <style>
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: #f5f7fa;
     color: #2c3e50;
     margin: 0;
-    padding: 40px 20px;
+    padding: 30px 20px;
     min-height: 100vh;
   }
 
@@ -22,131 +22,85 @@
   .header {
     text-align: center;
     color: #1a1a1a;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
   }
 
   .header h1 {
-    font-size: 2.5em;
-    margin-bottom: 0.3em;
-    font-weight: 700;
-  }
-
-  .header .tagline {
-    font-size: 1.3em;
-    margin-bottom: 1em;
-    opacity: 0.95;
-    font-weight: 500;
+    font-size: 2em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
   }
 
   .header .description {
-    font-size: 1.05em;
-    max-width: 800px;
+    font-size: 1em;
+    max-width: 700px;
     margin: 0 auto;
-    line-height: 1.7;
-    color: #495057;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 25px 30px;
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    line-height: 1.6;
+    color: #666;
   }
 
   .demos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 25px;
-    margin-top: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
   }
 
   .demo-card {
     background: white;
-    border-radius: 16px;
-    padding: 35px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .demo-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background: linear-gradient(90deg, #2c3e50, #495057);
-    opacity: 0;
-    transition: opacity 0.3s;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    border-left: 4px solid #3498db;
   }
 
   .demo-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-  }
-
-  .demo-card:hover::before {
-    opacity: 1;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   .demo-icon {
-    font-size: 3em;
-    margin-bottom: 15px;
+    font-size: 2.5em;
+    margin-bottom: 12px;
     display: block;
   }
 
   .demo-title {
-    font-size: 1.5em;
-    font-weight: 700;
-    margin-bottom: 15px;
+    font-size: 1.3em;
+    font-weight: 600;
+    margin-bottom: 10px;
     color: #1a1a1a;
   }
 
-  .demo-subtitle {
-    font-size: 0.95em;
-    color: #666;
-    margin-bottom: 15px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
   .demo-description {
-    color: #495057;
-    line-height: 1.7;
-    margin-bottom: 25px;
-    font-size: 1em;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-size: 0.95em;
   }
 
   .demo-link {
     display: inline-block;
-    background: #2c3e50;
+    background: #3498db;
     color: white;
-    padding: 12px 28px;
-    border-radius: 8px;
+    padding: 10px 24px;
+    border-radius: 6px;
     text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    font-weight: 500;
+    transition: background 0.2s;
+    font-size: 0.95em;
   }
 
   .demo-link:hover {
-    background: #1a252f;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: #2980b9;
   }
 
   .footer {
     text-align: center;
-    margin-top: 60px;
-    color: #495057;
-    opacity: 0.9;
-    font-size: 0.95em;
-  }
-
-  .footer a {
-    color: #2c3e50;
-    text-decoration: underline;
+    margin-top: 50px;
+    color: #666;
+    font-size: 0.9em;
   }
 
   @media (max-width: 768px) {
@@ -167,47 +121,42 @@
 <div class="container">
   <div class="header">
     <h1>AI for Healthcare: Interactive Demos</h1>
-    <div class="tagline">Making Complex AI Concepts Accessible Through Interactive Learning</div>
     <div class="description">
-      Three hands-on demos teaching fundamental AI/healthcare concepts: why models degrade over time, why sample size matters for prediction confidence, and why human-AI collaboration outperforms either alone. Each demo includes interactive visualizations and collapsible technical deep-dives.
+      Interactive demonstrations of key AI concepts in healthcare. Learn through hands-on exploration with technical explanations available for deeper understanding.
     </div>
   </div>
 
   <div class="demos-grid">
     <div class="demo-card">
       <span class="demo-icon">🔬</span>
-      <div class="demo-subtitle">Temporal Drift</div>
-      <div class="demo-title">When AI Models Go Stale</div>
+      <div class="demo-title">Model Drift Over Time</div>
       <div class="demo-description">
-        Watch how a sleep apnea detection model's accuracy degrades over 24 months as patients age, medications change, and devices update. Learn why deployment isn't "train once, use forever"—and exactly when retraining is needed.
+        See how AI model accuracy degrades as patient populations change. Learn why models need retraining and how demographic shifts impact performance.
       </div>
-      <a href="temporal-drift.html" class="demo-link">Explore Demo →</a>
+      <a href="temporal-drift.html" class="demo-link">Explore Demo</a>
     </div>
 
     <div class="demo-card">
       <span class="demo-icon">🤝</span>
-      <div class="demo-subtitle">Human-AI Collaboration</div>
-      <div class="demo-title">Better Together Than Alone</div>
+      <div class="demo-title">Human-AI Collaboration</div>
       <div class="demo-description">
-        Compare AI-only, clinician-only, and collaborative autism screening. Discover why AI catches subtle patterns humans miss, while clinicians catch edge cases AI misses—and why combining them achieves 92% accuracy vs 80-82% individually.
+        Compare AI-only vs. clinician-only vs. hybrid diagnosis. See why combining AI and human expertise achieves better results than either alone.
       </div>
-      <a href="human-ai-diagnosis.html" class="demo-link">Explore Demo →</a>
+      <a href="human-ai-diagnosis.html" class="demo-link">Explore Demo</a>
     </div>
 
     <div class="demo-card">
       <span class="demo-icon">📊</span>
-      <div class="demo-subtitle">Sample Size & Confidence</div>
-      <div class="demo-title">How Much Data Is Enough?</div>
+      <div class="demo-title">Training Data & Model Performance</div>
       <div class="demo-description">
-        See how prediction confidence improves as you collect more nights of wearable data. Understand the √n relationship between sample size and uncertainty—and why 7 days of data is dangerously unreliable while 30+ days enables safe clinical decisions.
+        Explore how training set size affects AI model accuracy and confidence. Learn why more data leads to better, more reliable predictions.
       </div>
-      <a href="sample-size.html" class="demo-link">Explore Demo →</a>
+      <a href="sample-size.html" class="demo-link">Explore Demo</a>
     </div>
   </div>
 
   <div class="footer">
-    Built to bridge the gap between computer science and clinical practice.<br>
-    All demos are single-file HTML with no dependencies—view source to see the implementation.
+    Interactive educational demos for healthcare AI concepts.
   </div>
 </div>
 
