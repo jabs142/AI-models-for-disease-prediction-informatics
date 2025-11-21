@@ -487,28 +487,6 @@
       </div>
     </div>
   </div>
-
-  <!-- COLLAPSIBLE: VIEW PROMPT -->
-  <div class="collapsible-section">
-    <button class="collapsible-toggle" onclick="togglePrompt()">
-      <span>📋 View Prompt Used to Generate This Demo</span>
-      <span class="collapsible-arrow" id="promptArrow">›</span>
-    </button>
-
-    <div class="collapsible-content" id="promptContent">
-      <div class="prompt-text">
-        "Create an interactive website (HTML file only) to teach the concept of <strong>human-AI complementary intelligence</strong> in healthcare diagnostics. The tool should teach learners that AI and clinicians make different types of errors, and that hybrid systems combining both achieve better diagnostic performance than either alone.
-        <br><br>
-        The tool should simulate autism screening for 60 children (ages 2-5) using three modes: (1) AI Only - video behavior analysis detecting micro-patterns, (2) Clinician Only - developmental pediatricians using clinical interviews and observations, and (3) Hybrid - combining both approaches. Show that AI achieves ~80% accuracy, clinicians ~82%, but hybrid achieves ~92% by catching cases either would miss alone.
-        <br><br>
-        The visualization should display a grid of case cards that users can click to see detailed AI features (e.g., 'Gaze aversion: 0.31s avg vs typical 1.2s', 'Hand-flapping: 47 episodes detected') and clinician reasoning (e.g., 'Regression: lost 15 words between 18-24 months', 'Family history of ASD'). Include mode toggle buttons to switch between AI Only / Clinician Only / Hybrid views, with metrics showing accuracy/sensitivity/specificity for each mode.
-        <br><br>
-        Keep the interface focused on the core concept: one mode selector, metrics prominently displayed, case cards clearly showing which approach detected each case. Use generous spacing for comfortable reading.
-        <br><br>
-        The key learning: AI catches quantitative micro-behaviors humans miss; clinicians catch contextual factors AI doesn't see. Together they form a complementary system where 1+1>2. This teaches why 'AI replacing doctors' is the wrong framing—hybrid intelligence is the future."
-      </div>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -804,13 +782,6 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 function toggleDeepDive() {
   const content = document.getElementById('deepDiveContent');
   const arrow = document.getElementById('deepDiveArrow');
-  content.classList.toggle('visible');
-  arrow.classList.toggle('open');
-}
-
-function togglePrompt() {
-  const content = document.getElementById('promptContent');
-  const arrow = document.getElementById('promptArrow');
   content.classList.toggle('visible');
   arrow.classList.toggle('open');
 }

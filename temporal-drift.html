@@ -540,28 +540,6 @@
       </div>
     </div>
   </div>
-
-  <!-- COLLAPSIBLE: VIEW PROMPT -->
-  <div class="collapsible-section">
-    <button class="collapsible-toggle" onclick="togglePrompt()">
-      <span>📋 View Prompt Used to Generate This Demo</span>
-      <span class="collapsible-arrow" id="promptArrow">›</span>
-    </button>
-
-    <div class="collapsible-content" id="promptContent">
-      <div class="prompt-text">
-        "Create an interactive website (HTML file only) to teach the concept of <strong>temporal drift</strong> in AI models for healthcare. The tool should teach learners that AI models degrade over time as the real-world data distribution shifts from the training data, and that ongoing monitoring and retraining is essential for safe deployment.
-        <br><br>
-        The tool should simulate a wearable-based sleep apnea detection model deployed in January 2024. Learners should move a time slider from month 0 to month 24 and observe how model accuracy gradually decreases from 91% to around 75% as multiple drift factors accumulate: (1) patient cohort aging, (2) medication/treatment adoption (CPAP therapy), (3) seasonal patterns affecting sleep, and (4) device firmware updates changing sensor calibration.
-        <br><br>
-        The visualization should show a performance line chart over time with a slider control. Display current accuracy prominently, and trigger alert boxes when accuracy drops below thresholds (yellow warning at 3-5% drop, red critical at 8%+ drop).
-        <br><br>
-        Keep the interface focused on the core concept: one slider, one chart, one key metric (accuracy displayed large and clear). Use generous spacing for comfortable reading.
-        <br><br>
-        The key learning: deployment is not the end—models need continuous monitoring and periodic retraining to remain safe and effective in healthcare applications."
-      </div>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -993,13 +971,6 @@ function updateDashboard() {
 function toggleDeepDive() {
   const content = document.getElementById('deepDiveContent');
   const arrow = document.getElementById('deepDiveArrow');
-  content.classList.toggle('visible');
-  arrow.classList.toggle('open');
-}
-
-function togglePrompt() {
-  const content = document.getElementById('promptContent');
-  const arrow = document.getElementById('promptArrow');
   content.classList.toggle('visible');
   arrow.classList.toggle('open');
 }

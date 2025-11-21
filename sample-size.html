@@ -340,28 +340,6 @@
       </div>
     </div>
   </div>
-
-  <!-- COLLAPSIBLE: VIEW PROMPT -->
-  <div class="collapsible-section">
-    <button class="collapsible-toggle" onclick="togglePrompt()">
-      <span>📋 View Prompt Used to Generate This Demo</span>
-      <span class="collapsible-arrow" id="promptArrow">›</span>
-    </button>
-
-    <div class="collapsible-content" id="promptContent">
-      <div class="prompt-text">
-        "Create an interactive website (HTML file only) to teach how <strong>training data size affects AI model performance</strong> in healthcare. The tool should teach learners that more training data leads to better model accuracy and more reliable predictions.
-        <br><br>
-        The tool should simulate training a disease prediction model with varying sample sizes (100 to 10,000 patients). Learners should move a slider and observe how model accuracy increases from 68% (100 patients) to 93% (10,000 patients), while confidence intervals narrow from ±8% to ±1.5%.
-        <br><br>
-        The visualization should show a learning curve chart with training set size on the x-axis and accuracy on the y-axis, with a shaded confidence interval band that narrows as sample size increases. Display current metrics prominently: training set size, model accuracy, and confidence interval width.
-        <br><br>
-        Keep it simple: one slider, one chart, three metrics. No wearable data, no data tables, no biomarkers—just the core statistical concept.
-        <br><br>
-        The key learning: small training sets lead to unreliable models; large training sets enable accurate, trustworthy AI for clinical use."
-      </div>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -539,13 +517,6 @@ function updateDashboard() {
 function toggleDeepDive() {
   const content = document.getElementById('deepDiveContent');
   const arrow = document.getElementById('deepDiveArrow');
-  content.classList.toggle('visible');
-  arrow.classList.toggle('open');
-}
-
-function togglePrompt() {
-  const content = document.getElementById('promptContent');
-  const arrow = document.getElementById('promptArrow');
   content.classList.toggle('visible');
   arrow.classList.toggle('open');
 }
