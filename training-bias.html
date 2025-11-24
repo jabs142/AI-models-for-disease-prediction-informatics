@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Training Data Bias & Fairness</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f7fa;
+    color: #2c3e50;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 1.6em;
+    margin-bottom: 0.4em;
+    color: #1a1a1a;
+  }
+  .subtitle {
+    color: #666;
+    font-size: 0.95em;
+    margin-bottom: 35px;
+    line-height: 1.6;
+  }
+
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+  }
+
+  .card-header {
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-bottom: 25px;
+    color: #1a1a1a;
+  }
+
+  .back-button {
+    display: inline-block;
+    margin-bottom: 25px;
+    padding: 10px 20px;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  .back-button:hover {
+    background: #2980b9;
+  }
+
+  .slider-container {
+    margin: 25px 0;
+  }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  input[type=range] {
+    width: 100%;
+  }
+
+  .demographics-display {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 25px 0;
+  }
+
+  .demo-stat {
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .demo-stat-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+
+  .demo-stat-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 5px;
+  }
+
+  #fairnessChart {
+    height: 250px;
+    margin: 25px 0;
+  }
+
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 25px 0;
+  }
+
+  .metric-box {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .metric-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+
+  .metric-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 8px;
+  }
+
+  .gap-warning {
+    color: #e74c3c;
+    font-weight: 600;
+  }
+
+  .gap-ok {
+    color: #28a745;
+    font-weight: 600;
+  }
+
+  .insight-box {
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border-left: 4px solid #3498db;
+    background: #e3f2fd;
+    font-size: 0.95em;
+    line-height: 1.6;
+  }
+
+  .collapsible-section {
+    margin: 40px 0;
+  }
+
+  .collapsible-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 15px 20px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .collapsible-toggle:hover {
+    border-color: #3498db;
+    color: #3498db;
+    background: #f8f9fa;
+  }
+
+  .collapsible-arrow {
+    font-size: 1.1em;
+    transition: transform 0.2s;
+    color: #3498db;
+  }
+  .collapsible-arrow.open {
+    transform: rotate(90deg);
+  }
+
+  .collapsible-content {
+    display: none;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+    margin-top: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .collapsible-content.visible {
+    display: block;
+  }
+
+  .deep-dive-content h3 {
+    color: #2c3e50;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    font-size: 1.05em;
+  }
+  .deep-dive-content p {
+    margin-bottom: 1em;
+    color: #495057;
+    line-height: 1.7;
+  }
+  .deep-dive-content ul {
+    padding-left: 25px;
+    margin-bottom: 1em;
+    line-height: 1.6;
+  }
+  .deep-dive-content li {
+    margin-bottom: 6px;
+  }
+
+  .key-takeaway {
+    background: #e8f5e9;
+    padding: 18px 20px;
+    border-left: 4px solid #28a745;
+    border-radius: 6px;
+    margin-top: 25px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="index.html" class="back-button">← Back to Home</a>
+
+  <h1>📊 Training Data Bias & Fairness</h1>
+  <div class="subtitle">
+    <strong>What this teaches:</strong> Imbalanced training data leads to AI models that work well for majority groups but fail for minorities. Watch how dataset composition directly impacts fairness.<br>
+    <strong>Why it matters:</strong> Biased AI in healthcare can worsen health disparities, denying accurate diagnoses to underrepresented patients.
+  </div>
+
+  <div class="card">
+    <div class="card-header">Adjust Training Dataset Demographics</div>
+
+    <div class="slider-container">
+      <div class="slider-label">
+        <span>Race/Ethnicity</span>
+        <span><strong><span id="racePercent">80</span>% White | <span id="racePercentNon">20</span>% Non-White</strong></span>
+      </div>
+      <input type="range" id="raceSlider" min="50" max="95" step="5" value="80">
+    </div>
+
+    <div class="slider-container">
+      <div class="slider-label">
+        <span>Gender</span>
+        <span><strong><span id="genderPercent">70</span>% Male | <span id="genderPercentFemale">30</span>% Female</strong></span>
+      </div>
+      <input type="range" id="genderSlider" min="50" max="80" step="5" value="70">
+    </div>
+
+    <div class="slider-container">
+      <div class="slider-label">
+        <span>Age Distribution</span>
+        <span><strong><span id="agePercent">60</span>% Middle-aged (40-60) | <span id="agePercentOther">40</span>% Other ages</strong></span>
+      </div>
+      <input type="range" id="ageSlider" min="40" max="80" step="5" value="60">
+    </div>
+
+    <div class="demographics-display">
+      <div class="demo-stat">
+        <div class="demo-stat-value" id="totalSamples">10,000</div>
+        <div class="demo-stat-label">Total Patients</div>
+      </div>
+      <div class="demo-stat">
+        <div class="demo-stat-value" id="majoritySamples">6,720</div>
+        <div class="demo-stat-label">Majority Group</div>
+      </div>
+      <div class="demo-stat">
+        <div class="demo-stat-value" id="minoritySamples">3,280</div>
+        <div class="demo-stat-label">Minority Groups</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Model Performance by Demographic Group</div>
+
+    <canvas id="fairnessChart"></canvas>
+
+    <div class="metrics-grid">
+      <div class="metric-box">
+        <div class="metric-value" id="overallAccuracy">87%</div>
+        <div class="metric-label">Overall Accuracy</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value" id="equityGap">18%</div>
+        <div class="metric-label">Largest Equity Gap <span id="gapStatus" class="gap-warning">(Unfair)</span></div>
+      </div>
+    </div>
+
+    <div class="insight-box" id="insightBox">
+      The dataset is heavily imbalanced. The model performs well on majority groups but poorly on minorities, creating unfair outcomes.
+    </div>
+  </div>
+
+  <!-- COLLAPSIBLE: TECHNICAL DEEP DIVE -->
+  <div class="collapsible-section">
+    <button class="collapsible-toggle" onclick="toggleDeepDive()">
+      <span>📚 Technical Deep Dive: Bias in Training Data</span>
+      <span class="collapsible-arrow" id="deepDiveArrow">›</span>
+    </button>
+
+    <div class="collapsible-content deep-dive-content" id="deepDiveContent">
+      <h3>What is Training Data Bias?</h3>
+      <p>
+        Training data bias occurs when the dataset used to train an AI model does not represent the population it will serve. Models learn patterns from the data they see—if certain groups are underrepresented, the model cannot learn to make accurate predictions for those groups.
+      </p>
+
+      <h3>How Imbalanced Data Creates Unfairness</h3>
+      <p>
+        Machine learning models optimize for overall accuracy. When one group dominates the training data (e.g., 80% White patients), the model learns patterns specific to that group:
+      </p>
+      <ul>
+        <li><strong>Majority group:</strong> Model sees 8,000+ examples, learns detailed patterns, achieves 92% accuracy</li>
+        <li><strong>Minority group:</strong> Model sees only 2,000 examples, learns crude generalizations, achieves 74% accuracy</li>
+      </ul>
+      <p>
+        This creates an <strong>equity gap</strong>—the difference in accuracy between groups. Gaps > 10% indicate unfair performance.
+      </p>
+
+      <h3>Real-World Example: Pulse Oximeters</h3>
+      <p>
+        Pulse oximeters (devices measuring blood oxygen) were primarily tested on lighter-skinned individuals. Studies found:
+      </p>
+      <ul>
+        <li><strong>Light skin:</strong> 3.6% error rate</li>
+        <li><strong>Dark skin:</strong> 11.7% error rate (3x higher!)</li>
+      </ul>
+      <p>
+        This bias led to missed hypoxemia diagnoses in Black patients during COVID-19, contributing to worse outcomes.
+      </p>
+
+      <h3>Types of Bias</h3>
+      <p><strong>Representation Bias:</strong></p>
+      <ul>
+        <li>Occurs when training data does not reflect the target population</li>
+        <li>Example: Heart disease model trained on 70% male patients performs poorly on women</li>
+      </ul>
+
+      <p><strong>Label Bias:</strong></p>
+      <ul>
+        <li>Occurs when certain groups have systematically incorrect labels</li>
+        <li>Example: Pain assessment scores underestimate pain in minority patients, leading model to under-predict pain</li>
+      </ul>
+
+      <p><strong>Measurement Bias:</strong></p>
+      <ul>
+        <li>Occurs when data collection tools work differently for different groups</li>
+        <li>Example: Imaging devices calibrated for average BMI perform worse on obese patients</li>
+      </ul>
+
+      <h3>Measuring Fairness</h3>
+      <p>
+        Common fairness metrics in healthcare AI:
+      </p>
+      <ul>
+        <li><strong>Demographic Parity:</strong> Model prediction rate is similar across groups</li>
+        <li><strong>Equalized Odds:</strong> True positive and false positive rates are similar across groups</li>
+        <li><strong>Equity Gap:</strong> Difference in accuracy between best and worst performing groups (this demo uses this metric)</li>
+      </ul>
+
+      <h3>Solutions to Training Bias</h3>
+      <p><strong>1. Balanced Data Collection:</strong></p>
+      <ul>
+        <li>Intentionally recruit underrepresented groups</li>
+        <li>Target 50/50 splits for binary categories (male/female, race)</li>
+        <li>Ensure sufficient samples from all age groups, conditions, etc.</li>
+      </ul>
+
+      <p><strong>2. Reweighting:</strong></p>
+      <ul>
+        <li>Assign higher importance to underrepresented examples during training</li>
+        <li>Example: Count each minority patient as 2x during model optimization</li>
+      </ul>
+
+      <p><strong>3. Synthetic Oversampling:</strong></p>
+      <ul>
+        <li>Generate synthetic examples for minority groups (e.g., SMOTE algorithm)</li>
+        <li>Increases minority representation without collecting more real data</li>
+      </ul>
+
+      <p><strong>4. Separate Models:</strong></p>
+      <ul>
+        <li>Train different models for different groups when patterns differ</li>
+        <li>Example: Separate diabetes models for men and women</li>
+      </ul>
+
+      <h3>When "Overall Accuracy" Hides Bias</h3>
+      <p>
+        A model can have high overall accuracy (90%) while being unfair:
+      </p>
+      <ul>
+        <li>Population: 90% White, 10% Black</li>
+        <li>Accuracy on White patients: 95%</li>
+        <li>Accuracy on Black patients: 60%</li>
+        <li>Overall accuracy: (90% × 95%) + (10% × 60%) = 91.5% (looks good!)</li>
+      </ul>
+      <p>
+        But the model is catastrophically bad for Black patients. <strong>Always report performance by subgroup.</strong>
+      </p>
+
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> Imbalanced training data causes AI models to fail on underrepresented groups. In healthcare, this exacerbates existing disparities. Fair AI requires representative datasets, careful fairness evaluation, and mitigation strategies like reweighting or balanced collection.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const raceSlider = document.getElementById('raceSlider');
+const genderSlider = document.getElementById('genderSlider');
+const ageSlider = document.getElementById('ageSlider');
+
+const canvas = document.getElementById('fairnessChart');
+const ctx = canvas.getContext('2d');
+canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+const width = canvas.offsetWidth;
+const height = canvas.offsetHeight;
+
+function updateMetrics() {
+  const raceWhite = parseInt(raceSlider.value);
+  const genderMale = parseInt(genderSlider.value);
+  const ageMiddle = parseInt(ageSlider.value);
+
+  document.getElementById('racePercent').textContent = raceWhite;
+  document.getElementById('racePercentNon').textContent = 100 - raceWhite;
+  document.getElementById('genderPercent').textContent = genderMale;
+  document.getElementById('genderPercentFemale').textContent = 100 - genderMale;
+  document.getElementById('agePercent').textContent = ageMiddle;
+  document.getElementById('agePercentOther').textContent = 100 - ageMiddle;
+
+  // Calculate majority/minority samples
+  const majority = (raceWhite / 100) * (genderMale / 100) * (ageMiddle / 100) * 10000;
+  const minority = 10000 - majority;
+
+  document.getElementById('majoritySamples').textContent = Math.round(majority).toLocaleString();
+  document.getElementById('minoritySamples').textContent = Math.round(minority).toLocaleString();
+
+  // Calculate accuracies (majority gets higher accuracy)
+  const baseAccuracy = 85;
+  const whiteAccuracy = baseAccuracy + (raceWhite - 50) / 10;
+  const nonWhiteAccuracy = baseAccuracy - (raceWhite - 50) / 8;
+
+  const maleAccuracy = baseAccuracy + (genderMale - 50) / 12;
+  const femaleAccuracy = baseAccuracy - (genderMale - 50) / 10;
+
+  const middleAgeAccuracy = baseAccuracy + (ageMiddle - 50) / 10;
+  const otherAgeAccuracy = baseAccuracy - (ageMiddle - 50) / 12;
+
+  // Overall accuracy (weighted average)
+  const overallAcc = (
+    (raceWhite / 100) * whiteAccuracy + ((100 - raceWhite) / 100) * nonWhiteAccuracy +
+    (genderMale / 100) * maleAccuracy + ((100 - genderMale) / 100) * femaleAccuracy +
+    (ageMiddle / 100) * middleAgeAccuracy + ((100 - ageMiddle) / 100) * otherAgeAccuracy
+  ) / 3;
+
+  document.getElementById('overallAccuracy').textContent = Math.round(overallAcc) + '%';
+
+  // Equity gap (largest difference)
+  const gaps = [
+    Math.abs(whiteAccuracy - nonWhiteAccuracy),
+    Math.abs(maleAccuracy - femaleAccuracy),
+    Math.abs(middleAgeAccuracy - otherAgeAccuracy)
+  ];
+  const maxGap = Math.max(...gaps);
+
+  document.getElementById('equityGap').textContent = Math.round(maxGap) + '%';
+
+  const gapStatus = document.getElementById('gapStatus');
+  if (maxGap > 10) {
+    gapStatus.textContent = '(Unfair)';
+    gapStatus.className = 'gap-warning';
+  } else {
+    gapStatus.textContent = '(Fair)';
+    gapStatus.className = 'gap-ok';
+  }
+
+  // Draw chart
+  drawChart([
+    { label: 'White', value: whiteAccuracy },
+    { label: 'Non-White', value: nonWhiteAccuracy },
+    { label: 'Male', value: maleAccuracy },
+    { label: 'Female', value: femaleAccuracy },
+    { label: 'Middle-aged', value: middleAgeAccuracy },
+    { label: 'Other ages', value: otherAgeAccuracy }
+  ]);
+
+  // Update insight
+  let insight;
+  if (maxGap < 5) {
+    insight = 'Excellent! The dataset is well-balanced. The model performs fairly across all demographic groups with minimal equity gaps.';
+  } else if (maxGap < 10) {
+    insight = `Good balance. The model shows acceptable fairness with a ${Math.round(maxGap)}% equity gap. Minor disparities exist but are within reasonable bounds.`;
+  } else if (maxGap < 15) {
+    insight = `Warning: The dataset is imbalanced. The model shows a ${Math.round(maxGap)}% equity gap, meaning it performs significantly better on majority groups than minorities. This could lead to unfair healthcare outcomes.`;
+  } else {
+    insight = `Critical bias detected! The equity gap is ${Math.round(maxGap)}%, indicating severe unfairness. The model works well for majority patients but fails for underrepresented groups. This is unacceptable for clinical deployment.`;
+  }
+  document.getElementById('insightBox').textContent = insight;
+}
+
+function drawChart(groups) {
+  ctx.clearRect(0, 0, width, height);
+
+  const padding = { top: 20, right: 30, bottom: 60, left: 50 };
+  const plotWidth = width - padding.left - padding.right;
+  const plotHeight = height - padding.top - padding.bottom;
+
+  const barWidth = plotWidth / groups.length - 10;
+
+  // Draw grid
+  ctx.strokeStyle = '#e9ecef';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    const y = padding.top + (plotHeight / 5) * i;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, y);
+    ctx.lineTo(padding.left + plotWidth, y);
+    ctx.stroke();
+  }
+
+  // Y-axis labels
+  ctx.fillStyle = '#6c757d';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'right';
+  [100, 90, 80, 70, 60, 50].forEach((val, i) => {
+    const y = padding.top + (plotHeight / 5) * i;
+    ctx.fillText(val + '%', padding.left - 10, y + 4);
+  });
+
+  // Draw bars
+  groups.forEach((group, i) => {
+    const x = padding.left + i * (barWidth + 10) + 5;
+    const barHeight = ((group.value - 50) / 50) * plotHeight;
+    const y = padding.top + plotHeight - barHeight;
+
+    // Color based on performance
+    if (group.value >= 88) {
+      ctx.fillStyle = '#28a745';
+    } else if (group.value >= 82) {
+      ctx.fillStyle = '#f39c12';
+    } else {
+      ctx.fillStyle = '#e74c3c';
+    }
+
+    ctx.fillRect(x, y, barWidth, barHeight);
+
+    // Accuracy value on bar
+    ctx.fillStyle = '#2c3e50';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(Math.round(group.value) + '%', x + barWidth / 2, y - 5);
+
+    // Group label
+    ctx.fillStyle = '#495057';
+    ctx.font = '10px sans-serif';
+    ctx.save();
+    ctx.translate(x + barWidth / 2, height - padding.bottom + 15);
+    ctx.rotate(-Math.PI / 6);
+    ctx.fillText(group.label, 0, 0);
+    ctx.restore();
+  });
+
+  // Axis labels
+  ctx.fillStyle = '#495057';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Demographic Group', width / 2, height - 5);
+
+  ctx.save();
+  ctx.translate(12, padding.top + plotHeight / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.fillText('Model Accuracy (%)', 0, 0);
+  ctx.restore();
+}
+
+function toggleDeepDive() {
+  const content = document.getElementById('deepDiveContent');
+  const arrow = document.getElementById('deepDiveArrow');
+  content.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+raceSlider.addEventListener('input', updateMetrics);
+genderSlider.addEventListener('input', updateMetrics);
+ageSlider.addEventListener('input', updateMetrics);
+
+updateMetrics();
+</script>
+
+</body>
+</html>

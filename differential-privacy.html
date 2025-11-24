@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Differential Privacy in EHR Data</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f7fa;
+    color: #2c3e50;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 1.6em;
+    margin-bottom: 0.4em;
+    color: #1a1a1a;
+  }
+  .subtitle {
+    color: #666;
+    font-size: 0.95em;
+    margin-bottom: 35px;
+    line-height: 1.6;
+  }
+
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+  }
+
+  .card-header {
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-bottom: 25px;
+    color: #1a1a1a;
+  }
+
+  .back-button {
+    display: inline-block;
+    margin-bottom: 25px;
+    padding: 10px 20px;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  .back-button:hover {
+    background: #2980b9;
+  }
+
+  .controls {
+    margin: 25px 0;
+  }
+
+  .slider-container {
+    margin: 20px 0;
+  }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  input[type=range] {
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9em;
+  }
+
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .changed {
+    color: #e74c3c;
+    font-weight: 500;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 25px;
+  }
+
+  .metric-box {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .metric-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+
+  .metric-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 8px;
+  }
+
+  .insight-box {
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border-left: 4px solid #3498db;
+    background: #e3f2fd;
+    font-size: 0.95em;
+    line-height: 1.6;
+  }
+
+  .collapsible-section {
+    margin: 40px 0;
+  }
+
+  .collapsible-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 15px 20px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .collapsible-toggle:hover {
+    border-color: #3498db;
+    color: #3498db;
+    background: #f8f9fa;
+  }
+
+  .collapsible-arrow {
+    font-size: 1.1em;
+    transition: transform 0.2s;
+    color: #3498db;
+  }
+  .collapsible-arrow.open {
+    transform: rotate(90deg);
+  }
+
+  .collapsible-content {
+    display: none;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+    margin-top: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .collapsible-content.visible {
+    display: block;
+  }
+
+  .deep-dive-content h3 {
+    color: #2c3e50;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    font-size: 1.05em;
+  }
+  .deep-dive-content p {
+    margin-bottom: 1em;
+    color: #495057;
+    line-height: 1.7;
+  }
+  .deep-dive-content ul {
+    padding-left: 25px;
+    margin-bottom: 1em;
+    line-height: 1.6;
+  }
+  .deep-dive-content li {
+    margin-bottom: 6px;
+  }
+
+  .key-takeaway {
+    background: #e8f5e9;
+    padding: 18px 20px;
+    border-left: 4px solid #28a745;
+    border-radius: 6px;
+    margin-top: 25px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="index.html" class="back-button">← Back to Home</a>
+
+  <h1>🔒 Differential Privacy in EHR Data</h1>
+  <div class="subtitle">
+    <strong>What this teaches:</strong> Adding statistical noise to patient data protects privacy but reduces data quality. Watch how increasing privacy levels make individual records harder to identify but also degrade research accuracy.<br>
+    <strong>Why it matters:</strong> Healthcare must balance patient privacy with research value. Too little privacy risks patient identification; too much makes data useless.
+  </div>
+
+  <div class="card">
+    <div class="card-header">Privacy-Utility Tradeoff</div>
+
+    <div class="controls">
+      <div class="slider-container">
+        <div class="slider-label">
+          <span>High Privacy (ε = 0.1)</span>
+          <span><strong>ε = <span id="epsilonValue">5.0</span></strong> | <span id="privacyLevel">Moderate Privacy</span></span>
+          <span>Low Privacy (ε = 10)</span>
+        </div>
+        <input type="range" id="epsilonSlider" min="0.1" max="10" step="0.1" value="5.0">
+      </div>
+    </div>
+
+    <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
+      Below is anonymized patient data. Values in <span class="changed">red</span> show how much they've changed with noise.
+    </p>
+
+    <div style="overflow-x: auto;">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Age</th>
+            <th>BMI</th>
+            <th>Blood Pressure</th>
+            <th>Glucose</th>
+            <th>Diagnosis</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-box">
+        <div class="metric-value" id="privacyScore">50%</div>
+        <div class="metric-label">Privacy Protection</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value" id="utilityScore">80%</div>
+        <div class="metric-label">Data Utility</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value" id="analysisError">15%</div>
+        <div class="metric-label">Analysis Error</div>
+      </div>
+    </div>
+
+    <div class="insight-box" id="insightBox">
+      Moderate privacy provides reasonable protection while maintaining data usefulness for research.
+    </div>
+  </div>
+
+  <!-- COLLAPSIBLE: TECHNICAL DEEP DIVE -->
+  <div class="collapsible-section">
+    <button class="collapsible-toggle" onclick="toggleDeepDive()">
+      <span>📚 Technical Deep Dive: Differential Privacy Mechanics</span>
+      <span class="collapsible-arrow" id="deepDiveArrow">›</span>
+    </button>
+
+    <div class="collapsible-content deep-dive-content" id="deepDiveContent">
+      <h3>What is Differential Privacy?</h3>
+      <p>
+        Differential privacy (DP) is a mathematical framework that provides provable privacy guarantees when releasing aggregate statistics from sensitive datasets. It works by adding carefully calibrated random noise to query results, making it impossible to determine whether any individual's data was included in the dataset.
+      </p>
+
+      <h3>The Privacy Parameter: Epsilon (ε)</h3>
+      <p>
+        The privacy budget <strong>ε (epsilon)</strong> controls the tradeoff between privacy and accuracy:
+      </p>
+      <ul>
+        <li><strong>ε = 0.1</strong> (High Privacy): Strong privacy protection, but data becomes very noisy and less useful</li>
+        <li><strong>ε = 1.0</strong> (Strong Privacy): Good privacy with acceptable noise levels for most analyses</li>
+        <li><strong>ε = 5.0</strong> (Moderate Privacy): Balanced approach - reasonable privacy with good data utility</li>
+        <li><strong>ε = 10+</strong> (Low Privacy): Minimal privacy protection, data remains highly accurate</li>
+      </ul>
+
+      <h3>How Noise is Added</h3>
+      <p>
+        This demo uses the <strong>Laplace mechanism</strong>, which adds noise drawn from a Laplace distribution. The amount of noise is proportional to <strong>1/ε</strong>:
+      </p>
+      <p style="background: #f8f9fa; padding: 12px; border-radius: 5px; font-family: monospace; text-align: center;">
+        Noisy Value = True Value + Laplace(0, Δf/ε)
+      </p>
+      <p>
+        Where <strong>Δf</strong> is the sensitivity of the query (how much one person's data can change the result). Lower ε means more noise, stronger privacy.
+      </p>
+
+      <h3>Privacy-Utility Tradeoff in Practice</h3>
+      <p>
+        In this demo, you can observe:
+      </p>
+      <ul>
+        <li><strong>High Privacy (ε = 0.1-1.0):</strong> Individual records are heavily obscured - you cannot identify specific patients. However, aggregate statistics (mean blood pressure, diabetes prevalence) become unreliable.</li>
+        <li><strong>Moderate Privacy (ε = 3.0-7.0):</strong> Good balance - individual privacy is protected while research results remain valid. This is typical for real-world applications.</li>
+        <li><strong>Low Privacy (ε > 8.0):</strong> Minimal noise means data is nearly identical to original values. Privacy protection is weak - outliers or rare conditions might reveal patient identities.</li>
+      </ul>
+
+      <h3>Real-World Applications</h3>
+      <p>
+        Differential privacy is used by:
+      </p>
+      <ul>
+        <li><strong>US Census Bureau:</strong> Protects individual responses in published census data</li>
+        <li><strong>Apple:</strong> Collects usage statistics while preserving user privacy</li>
+        <li><strong>Healthcare Research:</strong> Enables sharing of medical datasets without HIPAA violations</li>
+        <li><strong>Clinical Trials:</strong> Publishes aggregate results without revealing participant data</li>
+      </ul>
+
+      <h3>Why This Matters for Healthcare</h3>
+      <p>
+        EHR data contains highly sensitive information (diagnoses, genetic data, mental health records). Differential privacy allows:
+      </p>
+      <ul>
+        <li>Researchers to study disease patterns without accessing raw patient records</li>
+        <li>Hospitals to share data for AI training while protecting patient identities</li>
+        <li>Public health agencies to release statistics without privacy breaches</li>
+      </ul>
+      <p>
+        However, too much noise can hide real medical trends (e.g., outbreak detection, rare disease diagnosis), so choosing the right ε is critical.
+      </p>
+
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> Differential privacy is not free - stronger privacy means noisier data. Healthcare must carefully calibrate ε to protect patients while preserving research value. Typical applications use ε = 1.0 to 5.0 as a practical compromise.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Original patient data
+const originalData = [
+  { id: 'P001', age: 45, bmi: 28.3, bp: 130, glucose: 105, diagnosis: 'Hypertension' },
+  { id: 'P002', age: 62, bmi: 32.1, bp: 145, glucose: 180, diagnosis: 'Diabetes' },
+  { id: 'P003', age: 38, bmi: 24.5, bp: 118, glucose: 92, diagnosis: 'Healthy' },
+  { id: 'P004', age: 71, bmi: 29.8, bp: 152, glucose: 115, diagnosis: 'Hypertension' },
+  { id: 'P005', age: 54, bmi: 35.2, bp: 138, glucose: 195, diagnosis: 'Diabetes' },
+  { id: 'P006', age: 29, bmi: 22.1, bp: 112, glucose: 88, diagnosis: 'Healthy' },
+  { id: 'P007', age: 66, bmi: 31.4, bp: 148, glucose: 172, diagnosis: 'Diabetes' },
+  { id: 'P008', age: 42, bmi: 26.7, bp: 125, glucose: 98, diagnosis: 'Healthy' },
+  { id: 'P009', age: 58, bmi: 33.6, bp: 142, glucose: 188, diagnosis: 'Diabetes' },
+  { id: 'P010', age: 35, bmi: 23.9, bp: 115, glucose: 90, diagnosis: 'Healthy' }
+];
+
+// Laplace distribution noise
+function laplace(mu, b) {
+  const u = Math.random() - 0.5;
+  return mu - b * Math.sign(u) * Math.log(1 - 2 * Math.abs(u));
+}
+
+function addNoise(value, epsilon, sensitivity = 10) {
+  const scale = sensitivity / epsilon;
+  return value + laplace(0, scale);
+}
+
+function updateData() {
+  const epsilon = parseFloat(document.getElementById('epsilonSlider').value);
+  document.getElementById('epsilonValue').textContent = epsilon.toFixed(1);
+
+  // Privacy level description
+  let privacyDesc;
+  if (epsilon < 1) privacyDesc = 'High Privacy';
+  else if (epsilon < 4) privacyDesc = 'Strong Privacy';
+  else if (epsilon < 7) privacyDesc = 'Moderate Privacy';
+  else privacyDesc = 'Low Privacy';
+  document.getElementById('privacyLevel').textContent = privacyDesc;
+
+  // Calculate privacy score (inverse of epsilon, normalized)
+  const privacyScore = Math.min(100, (10 - epsilon) * 10);
+  document.getElementById('privacyScore').textContent = Math.round(privacyScore) + '%';
+
+  // Utility decreases as privacy increases
+  const utilityScore = Math.min(100, epsilon * 10);
+  document.getElementById('utilityScore').textContent = Math.round(utilityScore) + '%';
+
+  // Analysis error increases as epsilon decreases
+  const analysisError = Math.max(5, (10 - epsilon) * 5);
+  document.getElementById('analysisError').textContent = Math.round(analysisError) + '%';
+
+  // Update table
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  originalData.forEach(patient => {
+    const row = tbody.insertRow();
+
+    const noisyAge = Math.round(addNoise(patient.age, epsilon, 5));
+    const noisyBMI = addNoise(patient.bmi, epsilon, 3);
+    const noisyBP = Math.round(addNoise(patient.bp, epsilon, 10));
+    const noisyGlucose = Math.round(addNoise(patient.glucose, epsilon, 20));
+
+    const ageChanged = Math.abs(noisyAge - patient.age) > 1;
+    const bmiChanged = Math.abs(noisyBMI - patient.bmi) > 0.5;
+    const bpChanged = Math.abs(noisyBP - patient.bp) > 3;
+    const glucoseChanged = Math.abs(noisyGlucose - patient.glucose) > 5;
+
+    row.innerHTML = `
+      <td>${patient.id}</td>
+      <td class="${ageChanged ? 'changed' : ''}">${noisyAge}</td>
+      <td class="${bmiChanged ? 'changed' : ''}">${noisyBMI.toFixed(1)}</td>
+      <td class="${bpChanged ? 'changed' : ''}">${noisyBP}</td>
+      <td class="${glucoseChanged ? 'changed' : ''}">${noisyGlucose}</td>
+      <td>${patient.diagnosis}</td>
+    `;
+  });
+
+  // Update insight
+  let insight;
+  if (epsilon < 1) {
+    insight = `High privacy (ε = ${epsilon.toFixed(1)}) heavily obscures individual records. Patient identities are well-protected, but aggregate statistics become unreliable for research. Data utility is severely compromised.`;
+  } else if (epsilon < 4) {
+    insight = `Strong privacy (ε = ${epsilon.toFixed(1)}) provides good protection while maintaining reasonable data quality. This level is suitable for most healthcare research applications where privacy is critical.`;
+  } else if (epsilon < 7) {
+    insight = `Moderate privacy (ε = ${epsilon.toFixed(1)}) balances protection with utility. Individual records have some protection, and research results remain valid. This is a common choice for shared datasets.`;
+  } else {
+    insight = `Low privacy (ε = ${epsilon.toFixed(1)}) adds minimal noise. Data is nearly identical to original values, making it very useful for analysis but offering weak privacy protection. Risk of patient re-identification is higher.`;
+  }
+  document.getElementById('insightBox').textContent = insight;
+}
+
+function toggleDeepDive() {
+  const content = document.getElementById('deepDiveContent');
+  const arrow = document.getElementById('deepDiveArrow');
+  content.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+document.getElementById('epsilonSlider').addEventListener('input', updateData);
+updateData();
+</script>
+
+</body>
+</html>

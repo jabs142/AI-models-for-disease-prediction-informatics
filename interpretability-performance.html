@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interpretability vs Performance Tradeoff</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f7fa;
+    color: #2c3e50;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 1.6em;
+    margin-bottom: 0.4em;
+    color: #1a1a1a;
+  }
+  .subtitle {
+    color: #666;
+    font-size: 0.95em;
+    margin-bottom: 35px;
+    line-height: 1.6;
+  }
+
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+  }
+
+  .card-header {
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-bottom: 25px;
+    color: #1a1a1a;
+  }
+
+  .back-button {
+    display: inline-block;
+    margin-bottom: 25px;
+    padding: 10px 20px;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  .back-button:hover {
+    background: #2980b9;
+  }
+
+  .slider-container {
+    margin: 25px 0;
+  }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  input[type=range] {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: linear-gradient(to right, #28a745 0%, #f39c12 50%, #e74c3c 100%);
+    outline: none;
+    -webkit-appearance: none;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #3498db;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+
+  input[type=range]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #3498db;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+
+  .metrics-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+  }
+  .metric-card {
+    padding: 18px 30px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 140px;
+    flex: 1;
+    max-width: 200px;
+  }
+  .metric-number {
+    font-size: 2.2em;
+    font-weight: bold;
+    color: #2c3e50;
+    transition: all 0.3s;
+  }
+  .metric-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 6px;
+  }
+
+  .visualization {
+    margin: 30px 0;
+    padding: 25px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    min-height: 200px;
+  }
+
+  .tree-diagram {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8em;
+    line-height: 1.8;
+    color: #2c3e50;
+  }
+
+  .tree-node {
+    margin-left: 20px;
+  }
+
+  .complexity-indicator {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    font-size: 0.9em;
+  }
+
+  .complexity-stat {
+    text-align: center;
+  }
+
+  .complexity-stat-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #3498db;
+  }
+
+  .example-section {
+    margin-top: 25px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+  }
+
+  .patient-example {
+    margin: 15px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #3498db;
+  }
+
+  .explanation {
+    margin-top: 10px;
+    padding: 10px;
+    background: #e3f2fd;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  .insight-box {
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border-left: 4px solid #3498db;
+    background: #e3f2fd;
+    font-size: 0.95em;
+    line-height: 1.6;
+  }
+
+  .collapsible-section {
+    margin: 40px 0;
+  }
+
+  .collapsible-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 15px 20px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .collapsible-toggle:hover {
+    border-color: #3498db;
+    color: #3498db;
+    background: #f8f9fa;
+  }
+
+  .collapsible-arrow {
+    font-size: 1.1em;
+    transition: transform 0.2s;
+    color: #3498db;
+  }
+  .collapsible-arrow.open {
+    transform: rotate(90deg);
+  }
+
+  .collapsible-content {
+    display: none;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+    margin-top: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .collapsible-content.visible {
+    display: block;
+  }
+
+  .deep-dive-content h3 {
+    color: #2c3e50;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    font-size: 1.05em;
+  }
+  .deep-dive-content h3:first-child {
+    margin-top: 0;
+  }
+  .deep-dive-content p {
+    margin-bottom: 1em;
+    color: #495057;
+    line-height: 1.7;
+  }
+  .deep-dive-content ul {
+    padding-left: 25px;
+    margin-bottom: 1em;
+    line-height: 1.6;
+  }
+  .deep-dive-content li {
+    margin-bottom: 6px;
+  }
+
+  .key-takeaway {
+    background: #e8f5e9;
+    padding: 18px 20px;
+    border-left: 4px solid #28a745;
+    border-radius: 6px;
+    margin-top: 25px;
+  }
+
+  .depth-label {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #3498db;
+    margin-bottom: 15px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="index.html" class="back-button">← Back to Home</a>
+
+  <h1>⚖️ Interpretability vs. Performance Tradeoff</h1>
+  <div class="subtitle">
+    <strong>What this teaches:</strong> As you increase model complexity (decision tree depth), accuracy improves but interpretability decreases. Explore this fundamental tradeoff by adjusting the slider and watching how the model changes.<br>
+    <strong>Why it matters:</strong> In healthcare, you must balance explainability (can clinicians understand it?) with accuracy (does it save lives?). This choice depends on the clinical context.
+  </div>
+
+  <div class="card">
+    <div class="card-header">Model Complexity Control</div>
+
+    <div class="slider-container">
+      <div class="slider-label">
+        <span>Simple (High Interpretability)</span>
+        <span><strong>Decision Tree Depth: <span id="depthValue">3</span></strong></span>
+        <span>Complex (High Accuracy)</span>
+      </div>
+      <input type="range" id="complexitySlider" min="1" max="10" step="1" value="3">
+    </div>
+
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-number" id="accuracyValue">85%</div>
+        <div class="metric-label">Accuracy</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number" id="interpretabilityValue">80%</div>
+        <div class="metric-label">Interpretability</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number" id="complexityValue">7</div>
+        <div class="metric-label">Decision Nodes</div>
+      </div>
+    </div>
+
+    <div class="visualization" id="modelViz">
+      <!-- Model visualization will be inserted here -->
+    </div>
+
+    <div class="example-section">
+      <div class="card-header" style="margin-bottom: 15px;">Example Patient Prediction</div>
+      <div id="exampleContainer">
+        <!-- Example will be inserted here -->
+      </div>
+    </div>
+
+    <div class="insight-box" id="insightBox">
+      This decision tree is moderately interpretable and achieves good accuracy. Clinicians can follow most of the logic.
+    </div>
+  </div>
+
+  <!-- COLLAPSIBLE: TECHNICAL DEEP DIVE -->
+  <div class="collapsible-section">
+    <button class="collapsible-toggle" onclick="toggleDeepDive()">
+      <span>📚 Technical Deep Dive: The Interpretability-Performance Tradeoff</span>
+      <span class="collapsible-arrow" id="deepDiveArrow">›</span>
+    </button>
+
+    <div class="collapsible-content deep-dive-content" id="deepDiveContent">
+      <h3>What is Model Interpretability?</h3>
+      <p>
+        <strong>Interpretability</strong> (or explainability) is the degree to which a human can understand why a model made a specific prediction. In healthcare, this means a clinician can follow the model's reasoning and validate whether it makes medical sense.
+      </p>
+
+      <h3>Decision Tree Depth and Complexity</h3>
+      <p>
+        A decision tree's <strong>depth</strong> determines how many sequential questions it can ask before making a prediction:
+      </p>
+      <ul>
+        <li><strong>Depth 1-2 (Very Simple):</strong> 1-3 decision nodes. Fully interpretable - a clinician can memorize the entire logic. However, accuracy is limited (~75-82%) because it can only capture simple patterns.</li>
+        <li><strong>Depth 3-5 (Moderate):</strong> 7-31 decision nodes. Still interpretable - can be written on one page. Good balance of accuracy (~85-89%) and explainability.</li>
+        <li><strong>Depth 6-8 (Complex):</strong> 63-255 decision nodes. Hard to interpret - too many paths to follow mentally. High accuracy (~90-93%) by capturing intricate patterns.</li>
+        <li><strong>Depth 9-10 (Very Complex):</strong> 500+ decision nodes. Essentially uninterpretable - no human can trace all paths. Highest accuracy (~93-95%) but loses the benefits of explainability.</li>
+      </ul>
+
+      <h3>Why Does Depth Increase Accuracy?</h3>
+      <p>
+        Deeper trees can learn more nuanced decision boundaries:
+      </p>
+      <ul>
+        <li><strong>Depth 1:</strong> "If glucose > 140, predict diabetes" - simple threshold, misses many cases</li>
+        <li><strong>Depth 3:</strong> "If glucose > 140 AND (BMI > 30 OR age > 60), predict diabetes" - considers interactions</li>
+        <li><strong>Depth 7:</strong> Considers complex combinations like "glucose > 135 AND BMI > 28 AND age in [45-55] AND blood pressure < 130" - very specific patterns that improve accuracy</li>
+      </ul>
+      <p>
+        However, deeper trees eventually <strong>overfit</strong> - they memorize training data noise rather than learning true patterns, which is why accuracy plateaus around depth 8-10.
+      </p>
+
+      <h3>The Tradeoff in Practice</h3>
+      <p><strong>When to use simple models (depth 1-3):</strong></p>
+      <ul>
+        <li>Clinical guidelines that must be memorized (e.g., triage protocols)</li>
+        <li>Regulatory approval requiring full explainability</li>
+        <li>Building patient trust through transparent reasoning</li>
+        <li>Detecting and fixing model biases or errors</li>
+      </ul>
+
+      <p><strong>When to use moderate models (depth 4-6):</strong></p>
+      <ul>
+        <li>Decision support tools reviewed by clinicians</li>
+        <li>Balancing accuracy with clinical validation</li>
+        <li>Most healthcare AI applications fall here</li>
+      </ul>
+
+      <p><strong>When to use complex models (depth 7+):</strong></p>
+      <ul>
+        <li>High-stakes screening where false negatives are costly</li>
+        <li>Second-opinion systems alongside expert clinicians</li>
+        <li>Patterns too subtle for humans to detect</li>
+        <li>Note: Beyond depth 7-8, consider neural networks instead</li>
+      </ul>
+
+      <h3>Beyond Decision Trees</h3>
+      <p>
+        This demo uses decision trees because their interpretability changes smoothly with depth. In practice:
+      </p>
+      <ul>
+        <li><strong>Logistic Regression:</strong> Highly interpretable, moderate accuracy (similar to depth 2-3 tree)</li>
+        <li><strong>Random Forests:</strong> Ensemble of trees, higher accuracy but loses interpretability</li>
+        <li><strong>Neural Networks:</strong> Highest accuracy, essentially uninterpretable (equivalent to depth 15+ tree)</li>
+        <li><strong>Hybrid approaches:</strong> Post-hoc explanations (LIME, SHAP) try to explain complex models</li>
+      </ul>
+
+      <h3>Real-World Example: Sepsis Prediction</h3>
+      <p>
+        Hospitals use AI to predict sepsis (life-threatening infection):
+      </p>
+      <ul>
+        <li><strong>Simple Model (Depth 2):</strong> 78% accuracy. Nurses can apply it mentally: "If temp > 100.4°F AND heart rate > 90, call rapid response." Fast, explainable, but misses 22% of cases.</li>
+        <li><strong>Moderate Model (Depth 5):</strong> 87% accuracy. Implemented in EHR system with clear decision paths shown to clinicians. Catches more cases while remaining auditable.</li>
+        <li><strong>Complex Neural Network:</strong> 92% accuracy. Best performance but "black box" - clinicians may distrust or override it. Regulatory challenges.</li>
+      </ul>
+      <p>
+        Most hospitals chose the moderate model (depth 4-6) as the sweet spot between lives saved and clinical trust.
+      </p>
+
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> There is no free lunch - increasing model complexity improves accuracy but reduces interpretability. The right choice depends on your context: use simpler models when understanding matters most, moderate models for balanced decision support, and complex models only when accuracy is paramount and human oversight is guaranteed.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentDepth = 3;
+
+const examplePatient = { age: 55, glucose: 185, bmi: 32, bp: 145, family: 'Yes', actual: 'Diabetes' };
+
+// Accuracy increases with depth but plateaus (sigmoid curve)
+function getAccuracy(depth) {
+  const base = 72;
+  const max = 94;
+  const growth = 3.5;
+  return Math.min(max, base + growth * depth - 0.15 * depth * depth);
+}
+
+// Interpretability decreases with depth (exponential decay)
+function getInterpretability(depth) {
+  return Math.round(Math.max(5, 100 * Math.exp(-0.25 * (depth - 1))));
+}
+
+// Number of decision nodes grows exponentially (2^depth - 1)
+function getNodeCount(depth) {
+  return Math.pow(2, depth) - 1;
+}
+
+function renderTree(depth) {
+  const viz = document.getElementById('modelViz');
+
+  if (depth === 1) {
+    viz.innerHTML = `
+      <div class="depth-label">Very Simple Decision Tree (Depth 1)</div>
+      <div class="tree-diagram">
+        <strong style="font-size: 1.05em;">Diabetes Risk Prediction</strong><br><br>
+        <div>🔹 <strong>Is Glucose > 140?</strong></div>
+        <div class="tree-node">
+          ├─ <strong>Yes</strong> → <span style="color: #e74c3c; font-weight: bold;">PREDICT: Diabetes</span>
+        </div>
+        <div class="tree-node">
+          └─ <strong>No</strong> → <span style="color: #28a745; font-weight: bold;">PREDICT: Healthy</span>
+        </div>
+      </div>
+    `;
+  } else if (depth === 2) {
+    viz.innerHTML = `
+      <div class="depth-label">Simple Decision Tree (Depth 2)</div>
+      <div class="tree-diagram">
+        <strong style="font-size: 1.05em;">Diabetes Risk Prediction</strong><br><br>
+        <div>🔹 <strong>Is Glucose > 140?</strong></div>
+        <div class="tree-node">
+          ├─ <strong>Yes</strong> → Is BMI > 30?
+          <div class="tree-node">
+            │  ├─ <strong>Yes</strong> → <span style="color: #e74c3c; font-weight: bold;">PREDICT: Diabetes</span>
+          </div>
+          <div class="tree-node">
+            │  └─ <strong>No</strong> → <span style="color: #f39c12; font-weight: bold;">PREDICT: Healthy</span>
+          </div>
+        </div>
+        <div class="tree-node">
+          └─ <strong>No</strong> → <span style="color: #28a745; font-weight: bold;">PREDICT: Healthy</span>
+        </div>
+      </div>
+    `;
+  } else if (depth === 3) {
+    viz.innerHTML = `
+      <div class="depth-label">Moderate Decision Tree (Depth 3)</div>
+      <div class="tree-diagram">
+        <strong style="font-size: 1.05em;">Diabetes Risk Prediction</strong><br><br>
+        <div>🔹 <strong>Is Glucose > 140?</strong></div>
+        <div class="tree-node">
+          ├─ <strong>Yes</strong> → Is BMI > 30?
+          <div class="tree-node">
+            │  ├─ <strong>Yes</strong> → <span style="color: #e74c3c; font-weight: bold;">PREDICT: Diabetes (High Risk)</span>
+          </div>
+          <div class="tree-node">
+            │  └─ <strong>No</strong> → Is Age > 60?
+          </div>
+          <div class="tree-node">
+            │     ├─ <strong>Yes</strong> → <span style="color: #f39c12; font-weight: bold;">PREDICT: Diabetes (Moderate Risk)</span>
+          </div>
+          <div class="tree-node">
+            │     └─ <strong>No</strong> → <span style="color: #28a745; font-weight: bold;">PREDICT: Healthy</span>
+          </div>
+        </div>
+        <div class="tree-node">
+          └─ <strong>No</strong> → <span style="color: #28a745; font-weight: bold;">PREDICT: Healthy</span>
+        </div>
+      </div>
+    `;
+  } else if (depth >= 4 && depth <= 6) {
+    const nodeCount = getNodeCount(depth);
+    viz.innerHTML = `
+      <div class="depth-label">Complex Decision Tree (Depth ${depth})</div>
+      <div class="tree-diagram">
+        <strong style="font-size: 1.05em;">Diabetes Risk Prediction - Partial Tree View</strong><br><br>
+        <div>🔹 <strong>Is Glucose > 140?</strong></div>
+        <div class="tree-node">
+          ├─ <strong>Yes</strong> → Is BMI > 30?
+          <div class="tree-node">
+            │  ├─ <strong>Yes</strong> → Is Age > 50?
+          </div>
+          <div class="tree-node">
+            │  │  ├─ <strong>Yes</strong> → Is BP > 130?
+          </div>
+          <div class="tree-node">
+            │  │  │  ├─ <strong>Yes</strong> → <span style="color: #e74c3c; font-weight: bold;">PREDICT: Diabetes</span>
+          </div>
+          <div class="tree-node">
+            │  │  │  └─ <strong>No</strong> → <span style="color: #f39c12; font-weight: bold;">PREDICT: Diabetes</span>
+          </div>
+          <div class="tree-node">
+            │  │  └─ <strong>No</strong> → ... (continues)
+          </div>
+          <div class="tree-node">
+            │  └─ <strong>No</strong> → ... (continues)
+          </div>
+        </div>
+        <div class="tree-node">
+          └─ <strong>No</strong> → ... (continues)
+        </div>
+        <br>
+        <div style="text-align: center; color: #666; font-size: 0.95em; margin-top: 15px;">
+          ⚠️ Tree is getting complex: ${nodeCount} total decision nodes<br>
+          Showing only a small portion - full tree is difficult to visualize
+        </div>
+      </div>
+    `;
+  } else {
+    const nodeCount = getNodeCount(depth);
+    viz.innerHTML = `
+      <div class="depth-label">Very Complex Decision Tree (Depth ${depth})</div>
+      <div style="text-align: center; padding: 40px; background: #2c3e50; color: white; border-radius: 8px;">
+        <div style="font-size: 3em; margin-bottom: 15px;">🌳</div>
+        <div style="font-size: 1.2em; margin-bottom: 10px;">Highly Complex Decision Tree</div>
+        <div style="opacity: 0.9; font-size: 0.9em; margin-bottom: 20px;">${nodeCount} decision nodes across ${depth} levels</div>
+        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 6px; font-size: 0.9em;">
+          <strong>⚠️ Effectively Uninterpretable</strong><br>
+          Tree has too many paths for humans to trace<br>
+          At this complexity, consider using neural networks instead
+        </div>
+      </div>
+    `;
+  }
+}
+
+function renderExample(depth) {
+  const container = document.getElementById('exampleContainer');
+  const patient = examplePatient;
+
+  let prediction = '';
+  let explanation = '';
+  let correct = false;
+
+  // Simulate predictions based on depth
+  if (depth === 1) {
+    prediction = patient.glucose > 140 ? 'Diabetes' : 'Healthy';
+    explanation = `<strong>Simple Rule:</strong> Glucose (${patient.glucose}) > 140 → Predict ${prediction}`;
+    correct = prediction === patient.actual;
+  } else if (depth === 2) {
+    if (patient.glucose > 140) {
+      prediction = patient.bmi > 30 ? 'Diabetes' : 'Healthy';
+      explanation = `<strong>Decision Path:</strong> Glucose (${patient.glucose}) > 140 ✓ → BMI (${patient.bmi}) ${patient.bmi > 30 ? '> 30 ✓' : '≤ 30'} → Predict ${prediction}`;
+    } else {
+      prediction = 'Healthy';
+      explanation = `<strong>Decision Path:</strong> Glucose (${patient.glucose}) ≤ 140 → Predict Healthy`;
+    }
+    correct = prediction === patient.actual;
+  } else if (depth >= 3 && depth <= 6) {
+    // More sophisticated logic for moderate depths
+    if (patient.glucose > 140 && patient.bmi > 30) {
+      prediction = 'Diabetes';
+      explanation = `<strong>Decision Path:</strong> Glucose (${patient.glucose}) > 140 ✓ → BMI (${patient.bmi}) > 30 ✓`;
+      if (depth >= 4) {
+        explanation += ` → Age (${patient.age}) > 50 ✓`;
+      }
+      if (depth >= 5) {
+        explanation += ` → BP (${patient.bp}) > 130 ✓`;
+      }
+      explanation += ` → Predict Diabetes`;
+      correct = true;
+    } else {
+      prediction = 'Diabetes';
+      explanation = `<strong>Decision Path:</strong> Complex multi-factor evaluation (${depth} levels deep) → Predict ${prediction}`;
+      correct = true;
+    }
+  } else {
+    // Very deep trees - black box
+    prediction = 'Diabetes';
+    explanation = `<strong>Decision Path:</strong> Tree is too complex to trace manually (${getNodeCount(depth)} decision nodes). Prediction made through ${depth} levels of branching logic. Cannot provide interpretable explanation.`;
+    correct = true;
+  }
+
+  container.innerHTML = `
+    <div class="patient-example">
+      <strong>Test Patient:</strong> Age ${patient.age}, Glucose ${patient.glucose}, BMI ${patient.bmi}, BP ${patient.bp}, Family History: ${patient.family}<br>
+      <strong>Prediction:</strong> <span style="color: ${correct ? '#28a745' : '#e74c3c'};">${prediction}</span> | <strong>Actual:</strong> ${patient.actual} ${correct ? '✓' : '✗'}
+      <div class="explanation">${explanation}</div>
+    </div>
+  `;
+}
+
+function updateDisplay() {
+  const accuracy = getAccuracy(currentDepth);
+  const interpretability = getInterpretability(currentDepth);
+  const nodeCount = getNodeCount(currentDepth);
+
+  document.getElementById('depthValue').textContent = currentDepth;
+  document.getElementById('accuracyValue').textContent = Math.round(accuracy) + '%';
+  document.getElementById('interpretabilityValue').textContent = interpretability + '%';
+  document.getElementById('complexityValue').textContent = nodeCount;
+
+  // Color accuracy based on value
+  const accElement = document.getElementById('accuracyValue');
+  if (accuracy < 80) accElement.style.color = '#e74c3c';
+  else if (accuracy < 88) accElement.style.color = '#f39c12';
+  else accElement.style.color = '#28a745';
+
+  // Color interpretability based on value
+  const interpElement = document.getElementById('interpretabilityValue');
+  if (interpretability > 70) interpElement.style.color = '#28a745';
+  else if (interpretability > 40) interpElement.style.color = '#f39c12';
+  else interpElement.style.color = '#e74c3c';
+
+  renderTree(currentDepth);
+  renderExample(currentDepth);
+
+  // Update insight box
+  let insight = '';
+  if (currentDepth <= 2) {
+    insight = `Very simple tree with only ${nodeCount} decision node${nodeCount > 1 ? 's' : ''}. Highly interpretable (${interpretability}%) - clinicians can memorize the entire logic. However, accuracy is limited to ${Math.round(accuracy)}% because it cannot capture complex patterns.`;
+  } else if (currentDepth <= 4) {
+    insight = `Moderate complexity with ${nodeCount} decision nodes. Good balance: ${interpretability}% interpretability means clinicians can still follow the logic, while ${Math.round(accuracy)}% accuracy provides reliable predictions. This is the sweet spot for most clinical applications.`;
+  } else if (currentDepth <= 6) {
+    insight = `Complex tree with ${nodeCount} decision nodes. High accuracy (${Math.round(accuracy)}%) captures intricate patterns, but interpretability drops to ${interpretability}% - too many paths for humans to trace mentally. Requires computational tools to explain.`;
+  } else {
+    insight = `Very complex tree with ${nodeCount} decision nodes across ${currentDepth} levels. Achieves highest accuracy (${Math.round(accuracy)}%), but essentially uninterpretable (${interpretability}%) - no human can follow all decision paths. At this complexity, neural networks may be more appropriate.`;
+  }
+  document.getElementById('insightBox').textContent = insight;
+}
+
+document.getElementById('complexitySlider').addEventListener('input', (e) => {
+  currentDepth = parseInt(e.target.value);
+  updateDisplay();
+});
+
+function toggleDeepDive() {
+  const content = document.getElementById('deepDiveContent');
+  const arrow = document.getElementById('deepDiveArrow');
+  content.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+updateDisplay();
+</script>
+
+</body>
+</html>
