@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fairness Metrics Explorer - AI for Healthcare</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f7fa;
+    color: #2c3e50;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .back-button {
+    display: inline-block;
+    color: #3498db;
+    text-decoration: none;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+  }
+
+  .back-button:hover {
+    text-decoration: underline;
+  }
+
+  h1 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    color: #1a1a1a;
+  }
+
+  .intro {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 0.95em;
+  }
+
+  /* Introduction Section */
+  .intro-section {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .intro-section h2 {
+    font-size: 1.2em;
+    margin: 0 0 15px 0;
+    color: #1a1a1a;
+  }
+
+  .intro-section h3 {
+    font-size: 1.05em;
+    margin: 20px 0 10px 0;
+    color: #333;
+  }
+
+  .scenario-box {
+    background: #e3f2fd;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+  }
+
+  /* Confusion Matrix Explanation */
+  .cm-explain {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 3px;
+    max-width: 400px;
+    margin: 20px auto;
+    font-size: 0.9em;
+  }
+
+  .cm-corner {
+    background: transparent;
+  }
+
+  .cm-header {
+    background: #e8e8e8;
+    padding: 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.85em;
+  }
+
+  .cm-row-header {
+    background: #e8e8e8;
+    padding: 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.85em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cm-cell {
+    padding: 15px 10px;
+    text-align: center;
+    border-radius: 4px;
+  }
+
+  .cm-correct {
+    background: #c8e6c9;
+  }
+
+  .cm-wrong {
+    background: #ffcdd2;
+  }
+
+  .cm-cell-icon {
+    font-size: 1.3em;
+    display: block;
+  }
+
+  .cm-cell-name {
+    font-weight: 600;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+
+  .cm-cell-desc {
+    font-size: 0.75em;
+    color: #666;
+    margin-top: 3px;
+  }
+
+  .definitions-list {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin: 15px 0;
+  }
+
+  .definitions-list dt {
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-top: 10px;
+  }
+
+  .definitions-list dt:first-child {
+    margin-top: 0;
+  }
+
+  .definitions-list dd {
+    margin: 5px 0 0 0;
+    color: #555;
+  }
+
+  .how-to-box {
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    padding: 15px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 20px;
+  }
+
+  .how-to-box ol {
+    margin: 10px 0 0 0;
+    padding-left: 20px;
+  }
+
+  .how-to-box li {
+    margin-bottom: 5px;
+  }
+
+  /* Metric Section */
+  .metric-section {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .metric-header {
+    margin-bottom: 15px;
+  }
+
+  .metric-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 8px 0;
+  }
+
+  .metric-question {
+    font-size: 1.05em;
+    color: #555;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  .metric-instruction {
+    background: #f0f7ff;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    color: #1565c0;
+    margin-bottom: 15px;
+  }
+
+  /* Confusion Matrix Grid */
+  .groups-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .groups-row {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  .group-container {
+    text-align: center;
+  }
+
+  .group-label {
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+  }
+
+  .group-a-label { color: #2980b9; }
+  .group-b-label { color: #e67e22; }
+
+  /* Confusion Matrix */
+  .matrix {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    grid-template-rows: auto 1fr 1fr;
+    gap: 2px;
+    max-width: 240px;
+    margin: 0 auto 15px auto;
+    font-size: 0.8em;
+  }
+
+  .matrix-corner {
+    background: transparent;
+  }
+
+  .matrix-header {
+    background: #f0f0f0;
+    padding: 8px 4px;
+    font-size: 0.7em;
+    font-weight: 500;
+    color: #666;
+    text-align: center;
+  }
+
+  .matrix-row-label {
+    background: #f0f0f0;
+    padding: 4px 6px;
+    font-size: 0.65em;
+    font-weight: 500;
+    color: #666;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .matrix-cell {
+    padding: 10px 6px;
+    text-align: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .cell-value {
+    font-size: 1.3em;
+    font-weight: 600;
+  }
+
+  .cell-label {
+    font-size: 0.6em;
+    color: #666;
+    margin-top: 2px;
+  }
+
+  /* Cell states */
+  .cell-highlighted {
+    background: #e8f5e9;
+    border: 2px solid #4caf50;
+  }
+
+  .cell-highlighted .cell-value {
+    color: #2e7d32;
+  }
+
+  .cell-muted {
+    background: #f5f5f5;
+    border: 2px solid transparent;
+    opacity: 0.4;
+  }
+
+  .cell-muted .cell-value {
+    color: #999;
+  }
+
+  /* Slider */
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 240px;
+    margin: 0 auto;
+  }
+
+  .slider-row input[type="range"] {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: #ddd;
+    outline: none;
+    -webkit-appearance: none;
+  }
+
+  .slider-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #3498db;
+    cursor: pointer;
+  }
+
+  .slider-value {
+    min-width: 45px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.95em;
+  }
+
+  .slider-label-text {
+    font-size: 0.75em;
+    color: #666;
+    min-width: 30px;
+  }
+
+  /* Formula display */
+  .formula-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .formula-row {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+  }
+
+  .formula-box {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85em;
+  }
+
+  .formula-result {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-top: 5px;
+  }
+
+  .formula-result.group-a { color: #2980b9; }
+  .formula-result.group-b { color: #e67e22; }
+
+  /* Result */
+  .result-box {
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+  }
+
+  .result-box.fair {
+    background: #e8f5e9;
+    border: 1px solid #a5d6a7;
+  }
+
+  .result-box.warning {
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+  }
+
+  .result-box.unfair {
+    background: #ffebee;
+    border: 1px solid #ef9a9a;
+  }
+
+  .result-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-bottom: 5px;
+  }
+
+  .result-value {
+    font-size: 1.4em;
+    font-weight: 600;
+  }
+
+  .result-value.fair { color: #2e7d32; }
+  .result-value.warning { color: #f57f17; }
+  .result-value.unfair { color: #c62828; }
+
+  .result-status {
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+
+  /* Insight box */
+  .insight-box {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 12px 15px;
+    margin-top: 15px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9em;
+  }
+
+  /* Summary section */
+  .summary-section {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .summary-section h2 {
+    font-size: 1.2em;
+    margin: 0 0 15px 0;
+  }
+
+  .key-point {
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    padding: 12px 15px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="index.html" class="back-button">&larr; Back to Home</a>
+
+  <h1>Understanding Fairness Metrics</h1>
+  <p class="intro">
+    Learn how to measure whether an AI system treats different groups fairly.
+  </p>
+
+  <!-- INTRODUCTION SECTION -->
+  <div class="intro-section">
+    <h2>Before You Start: Key Concepts</h2>
+
+    <h3>The Scenario</h3>
+    <div class="scenario-box">
+      <p style="margin:0">
+        Imagine an <strong>AI system that screens patients for a disease</strong>. For each patient, it predicts:
+      </p>
+      <ul style="margin: 10px 0 0 0">
+        <li><strong>POSITIVE</strong> = "This patient likely has the disease"</li>
+        <li><strong>NEGATIVE</strong> = "This patient likely does NOT have the disease"</li>
+      </ul>
+      <p style="margin: 10px 0 0 0">
+        After testing, we find out who <em>actually</em> had the disease. Comparing predictions to reality creates 4 possible outcomes:
+      </p>
+    </div>
+
+    <h3>The Confusion Matrix</h3>
+    <p>This grid shows all possible outcomes when comparing AI predictions to reality:</p>
+
+    <div class="cm-explain">
+      <div class="cm-corner"></div>
+      <div class="cm-header">AI said:<br>POSITIVE</div>
+      <div class="cm-header">AI said:<br>NEGATIVE</div>
+
+      <div class="cm-row-header">Actually<br>HAS<br>disease</div>
+      <div class="cm-cell cm-correct">
+        <span class="cm-cell-icon">&#10003;</span>
+        <div class="cm-cell-name">True Positive</div>
+        <div class="cm-cell-desc">Correct catch!</div>
+      </div>
+      <div class="cm-cell cm-wrong">
+        <span class="cm-cell-icon">&#10007;</span>
+        <div class="cm-cell-name">False Negative</div>
+        <div class="cm-cell-desc">Missed diagnosis</div>
+      </div>
+
+      <div class="cm-row-header">Actually<br>HEALTHY</div>
+      <div class="cm-cell cm-wrong">
+        <span class="cm-cell-icon">&#10007;</span>
+        <div class="cm-cell-name">False Positive</div>
+        <div class="cm-cell-desc">False alarm</div>
+      </div>
+      <div class="cm-cell cm-correct">
+        <span class="cm-cell-icon">&#10003;</span>
+        <div class="cm-cell-name">True Negative</div>
+        <div class="cm-cell-desc">Correctly cleared</div>
+      </div>
+    </div>
+
+    <dl class="definitions-list">
+      <dt>True Positive (TP)</dt>
+      <dd>Patient HAS disease, AI correctly said "positive" - good!</dd>
+
+      <dt>False Negative (FN)</dt>
+      <dd>Patient HAS disease, AI wrongly said "negative" - dangerous! (missed diagnosis)</dd>
+
+      <dt>False Positive (FP)</dt>
+      <dd>Patient is HEALTHY, AI wrongly said "positive" - unnecessary worry/tests</dd>
+
+      <dt>True Negative (TN)</dt>
+      <dd>Patient is HEALTHY, AI correctly said "negative" - good!</dd>
+    </dl>
+
+    <h3>Key Rates</h3>
+    <dl class="definitions-list">
+      <dt>True Positive Rate (TPR)</dt>
+      <dd>"Of all patients who HAVE the disease, what % did we correctly catch?"<br>
+      <code style="background:#eee;padding:2px 6px;border-radius:3px">TPR = TP / (TP + FN)</code></dd>
+
+      <dt>False Positive Rate (FPR)</dt>
+      <dd>"Of all HEALTHY patients, what % did we wrongly flag?"<br>
+      <code style="background:#eee;padding:2px 6px;border-radius:3px">FPR = FP / (FP + TN)</code></dd>
+    </dl>
+
+    <div class="how-to-box">
+      <strong>What to do in this demo:</strong>
+      <ol>
+        <li>Each section below shows a different way to measure fairness</li>
+        <li>You'll see two patient groups (Group A and Group B)</li>
+        <li><strong>Drag the sliders</strong> to change how well the AI performs for each group</li>
+        <li>Watch the numbers in the confusion matrix change</li>
+        <li>See whether the metric says "Fair" or "Unfair"</li>
+      </ol>
+      <p style="margin: 10px 0 0 0"><strong>The key question:</strong> Should the AI perform equally well for both groups?</p>
+    </div>
+  </div>
+
+  <!-- WHY TWO GROUPS? SECTION -->
+  <div class="intro-section">
+    <h2>Why Compare Two Groups?</h2>
+    <p>In the real world, AI systems often perform differently for different patient populations. For example:</p>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+      <li>A model might detect disease more accurately in <strong>younger patients</strong> than older ones</li>
+      <li>Performance might differ between <strong>men and women</strong> if training data was imbalanced</li>
+      <li>Patients from <strong>different hospitals or regions</strong> might get different quality predictions</li>
+    </ul>
+    <p>This happens because:</p>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+      <li>Training data may have had fewer examples from some groups</li>
+      <li>Disease may present differently in different populations</li>
+      <li>Historical patterns in healthcare data may reflect past inequities</li>
+    </ul>
+    <div class="scenario-box" style="margin-top: 15px;">
+      <strong>In this demo:</strong>
+      <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+        <li><strong>Group A</strong> and <strong>Group B</strong> represent two different patient populations</li>
+        <li>You control how well the AI performs for each group using sliders</li>
+        <li>Your goal: see how different fairness metrics detect unfair differences</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 1: Equal Opportunity -->
+  <div class="metric-section">
+    <div class="metric-header">
+      <h2 class="metric-title">1. Equal Opportunity</h2>
+      <p class="metric-question">"Are we catching the disease equally well in both groups?"</p>
+
+      <div class="scenario-box" style="background: #fff3e0; margin-bottom: 15px;">
+        <strong>The Real-World Problem:</strong><br>
+        An AI screening tool correctly identifies 85% of patients with disease in Group A, but only 65% in Group B. This means Group B patients are more likely to have their disease <em>missed</em> — a potentially life-threatening disparity.
+      </div>
+
+      <div class="metric-instruction">
+        <strong>What you're simulating:</strong> The sliders represent the AI's True Positive Rate (TPR) — how often it correctly catches disease. In real systems, you can't just "set both to 85%" because the model's performance depends on its training data. Try making the rates unequal to see what "unfair" looks like.
+      </div>
+    </div>
+
+    <div class="groups-row">
+      <div class="group-container">
+        <div class="group-label group-a-label">Group A</div>
+        <div class="matrix" id="eo-matrix-a">
+          <div class="matrix-corner"></div>
+          <div class="matrix-header">AI said:<br>Positive</div>
+          <div class="matrix-header">AI said:<br>Negative</div>
+          <div class="matrix-row-label">Has<br>disease</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eo-tp-a">85</div>
+            <div class="cell-label">TP</div>
+          </div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eo-fn-a">15</div>
+            <div class="cell-label">FN</div>
+          </div>
+          <div class="matrix-row-label">Healthy</div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">FP</div>
+          </div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">TN</div>
+          </div>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label-text">TPR:</span>
+          <input type="range" id="eo-slider-a" min="50" max="99" value="85" oninput="updateEO()">
+          <span class="slider-value" id="eo-val-a">85%</span>
+        </div>
+      </div>
+
+      <div class="group-container">
+        <div class="group-label group-b-label">Group B</div>
+        <div class="matrix" id="eo-matrix-b">
+          <div class="matrix-corner"></div>
+          <div class="matrix-header">AI said:<br>Positive</div>
+          <div class="matrix-header">AI said:<br>Negative</div>
+          <div class="matrix-row-label">Has<br>disease</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eo-tp-b">65</div>
+            <div class="cell-label">TP</div>
+          </div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eo-fn-b">35</div>
+            <div class="cell-label">FN</div>
+          </div>
+          <div class="matrix-row-label">Healthy</div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">FP</div>
+          </div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">TN</div>
+          </div>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label-text">TPR:</span>
+          <input type="range" id="eo-slider-b" min="50" max="99" value="65" oninput="updateEO()">
+          <span class="slider-value" id="eo-val-b">65%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="formula-row">
+      <div class="formula-box">
+        TPR = TP / (TP + FN)<br>
+        <span id="eo-formula-a">= 85 / 100</span><br>
+        <span class="formula-result group-a" id="eo-result-a">= 85%</span>
+      </div>
+      <div class="formula-box">
+        TPR = TP / (TP + FN)<br>
+        <span id="eo-formula-b">= 65 / 100</span><br>
+        <span class="formula-result group-b" id="eo-result-b">= 65%</span>
+      </div>
+    </div>
+
+    <div class="result-box unfair" id="eo-result-box">
+      <div class="result-label">Difference in True Positive Rates</div>
+      <div class="result-value unfair" id="eo-diff">20%</div>
+      <div class="result-status" id="eo-status">Unfair (>10% difference)</div>
+    </div>
+
+    <div class="insight-box" id="eo-insight">
+      Group B patients who actually have the disease are 20% less likely to be correctly diagnosed. This means more missed diagnoses for Group B.
+    </div>
+  </div>
+
+  <!-- SECTION 2: Equalized Odds -->
+  <div class="metric-section">
+    <div class="metric-header">
+      <h2 class="metric-title">2. Equalized Odds</h2>
+      <p class="metric-question">"Are ALL error rates equal?" (both catching disease AND false alarms)</p>
+
+      <div class="scenario-box" style="background: #fff3e0; margin-bottom: 15px;">
+        <strong>The Real-World Problem:</strong><br>
+        Even if an AI catches disease equally well in both groups, it might cause <em>more false alarms</em> in one group. This means healthy patients in that group get unnecessary tests, worry, and costs. Equalized Odds checks for both types of errors.
+      </div>
+
+      <div class="metric-instruction">
+        <strong>What you're simulating:</strong> Two sliders per group — TPR (catch rate) and FPR (false alarm rate). This is stricter than Equal Opportunity because both rates must be equal for fairness. Try scenarios where TPR is equal but FPR differs.
+      </div>
+    </div>
+
+    <div class="groups-row">
+      <div class="group-container">
+        <div class="group-label group-a-label">Group A</div>
+        <div class="matrix">
+          <div class="matrix-corner"></div>
+          <div class="matrix-header">AI said:<br>Positive</div>
+          <div class="matrix-header">AI said:<br>Negative</div>
+          <div class="matrix-row-label">Has<br>disease</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eqo-tp-a">85</div>
+            <div class="cell-label">TP</div>
+          </div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eqo-fn-a">15</div>
+            <div class="cell-label">FN</div>
+          </div>
+          <div class="matrix-row-label">Healthy</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eqo-fp-a">10</div>
+            <div class="cell-label">FP</div>
+          </div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eqo-tn-a">90</div>
+            <div class="cell-label">TN</div>
+          </div>
+        </div>
+        <div class="slider-row" style="margin-bottom:8px">
+          <span class="slider-label-text">TPR:</span>
+          <input type="range" id="eqo-tpr-a" min="50" max="99" value="85" oninput="updateEQO()">
+          <span class="slider-value" id="eqo-tpr-val-a">85%</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label-text">FPR:</span>
+          <input type="range" id="eqo-fpr-a" min="1" max="40" value="10" oninput="updateEQO()">
+          <span class="slider-value" id="eqo-fpr-val-a">10%</span>
+        </div>
+      </div>
+
+      <div class="group-container">
+        <div class="group-label group-b-label">Group B</div>
+        <div class="matrix">
+          <div class="matrix-corner"></div>
+          <div class="matrix-header">AI said:<br>Positive</div>
+          <div class="matrix-header">AI said:<br>Negative</div>
+          <div class="matrix-row-label">Has<br>disease</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eqo-tp-b">70</div>
+            <div class="cell-label">TP</div>
+          </div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eqo-fn-b">30</div>
+            <div class="cell-label">FN</div>
+          </div>
+          <div class="matrix-row-label">Healthy</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eqo-fp-b">25</div>
+            <div class="cell-label">FP</div>
+          </div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="eqo-tn-b">75</div>
+            <div class="cell-label">TN</div>
+          </div>
+        </div>
+        <div class="slider-row" style="margin-bottom:8px">
+          <span class="slider-label-text">TPR:</span>
+          <input type="range" id="eqo-tpr-b" min="50" max="99" value="70" oninput="updateEQO()">
+          <span class="slider-value" id="eqo-tpr-val-b">70%</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label-text">FPR:</span>
+          <input type="range" id="eqo-fpr-b" min="1" max="40" value="25" oninput="updateEQO()">
+          <span class="slider-value" id="eqo-fpr-val-b">25%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="formula-row">
+      <div class="formula-box">
+        TPR diff: |<span id="eqo-tpr-a-val">85</span>% - <span id="eqo-tpr-b-val">70</span>%| = <strong id="eqo-tpr-diff">15%</strong><br>
+        FPR diff: |<span id="eqo-fpr-a-val">10</span>% - <span id="eqo-fpr-b-val">25</span>%| = <strong id="eqo-fpr-diff">15%</strong>
+      </div>
+      <div class="formula-box">
+        Equalized Odds requires<br>
+        <strong>BOTH</strong> differences to be small
+      </div>
+    </div>
+
+    <div class="result-box unfair" id="eqo-result-box">
+      <div class="result-label">Maximum Difference (TPR or FPR)</div>
+      <div class="result-value unfair" id="eqo-diff">15%</div>
+      <div class="result-status" id="eqo-status">Unfair (>10% difference)</div>
+    </div>
+
+    <div class="insight-box" id="eqo-insight">
+      This is stricter than Equal Opportunity. Even if catch rates (TPR) are equal, the model can still be unfair if false alarm rates (FPR) differ. Group B has both worse detection AND more false alarms.
+    </div>
+  </div>
+
+  <!-- SECTION 3: Statistical Parity -->
+  <div class="metric-section">
+    <div class="metric-header">
+      <h2 class="metric-title">3. Statistical Parity</h2>
+      <p class="metric-question">"Are we flagging patients at equal rates?" (regardless of accuracy)</p>
+
+      <div class="scenario-box" style="background: #fff3e0; margin-bottom: 15px;">
+        <strong>The Real-World Problem:</strong><br>
+        An AI flags 40% of Group A for follow-up testing, but only 20% of Group B. Is this discrimination? Or does Group A genuinely have higher disease rates? Statistical Parity only looks at the <em>rate</em> of positive predictions — not whether they're correct.
+      </div>
+
+      <div class="metric-instruction">
+        <strong>What you're simulating:</strong> The slider controls what percentage of each group gets flagged as "positive." Notice that the accuracy breakdown (TP vs FP) differs between groups even when rates are equal — this metric ignores accuracy!
+      </div>
+    </div>
+
+    <div class="groups-row">
+      <div class="group-container">
+        <div class="group-label group-a-label">Group A</div>
+        <div class="matrix">
+          <div class="matrix-corner"></div>
+          <div class="matrix-header">AI said:<br>Positive</div>
+          <div class="matrix-header">AI said:<br>Negative</div>
+          <div class="matrix-row-label">Has<br>disease</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="sp-tp-a">25</div>
+            <div class="cell-label">TP</div>
+          </div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">FN</div>
+          </div>
+          <div class="matrix-row-label">Healthy</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="sp-fp-a">5</div>
+            <div class="cell-label">FP</div>
+          </div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">TN</div>
+          </div>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label-text">Rate:</span>
+          <input type="range" id="sp-slider-a" min="10" max="60" value="30" oninput="updateSP()">
+          <span class="slider-value" id="sp-val-a">30%</span>
+        </div>
+      </div>
+
+      <div class="group-container">
+        <div class="group-label group-b-label">Group B</div>
+        <div class="matrix">
+          <div class="matrix-corner"></div>
+          <div class="matrix-header">AI said:<br>Positive</div>
+          <div class="matrix-header">AI said:<br>Negative</div>
+          <div class="matrix-row-label">Has<br>disease</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="sp-tp-b">15</div>
+            <div class="cell-label">TP</div>
+          </div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">FN</div>
+          </div>
+          <div class="matrix-row-label">Healthy</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="sp-fp-b">15</div>
+            <div class="cell-label">FP</div>
+          </div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">TN</div>
+          </div>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label-text">Rate:</span>
+          <input type="range" id="sp-slider-b" min="10" max="60" value="30" oninput="updateSP()">
+          <span class="slider-value" id="sp-val-b">30%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="formula-row">
+      <div class="formula-box">
+        Selection Rate = (TP + FP) / Total<br>
+        <span id="sp-formula-a">= (25 + 5) / 100</span><br>
+        <span class="formula-result group-a" id="sp-result-a">= 30%</span>
+      </div>
+      <div class="formula-box">
+        Selection Rate = (TP + FP) / Total<br>
+        <span id="sp-formula-b">= (15 + 15) / 100</span><br>
+        <span class="formula-result group-b" id="sp-result-b">= 30%</span>
+      </div>
+    </div>
+
+    <div class="result-box fair" id="sp-result-box">
+      <div class="result-label">Difference in Selection Rates</div>
+      <div class="result-value fair" id="sp-diff">0%</div>
+      <div class="result-status" id="sp-status">Fair (<10% difference)</div>
+    </div>
+
+    <div class="insight-box" id="sp-insight">
+      Both groups get flagged at the same rate (30%). But look at the breakdown - Group A has mostly true positives (25 TP, 5 FP), while Group B has equal amounts (15 TP, 15 FP). Statistical parity only cares about the total rate, not accuracy!
+    </div>
+  </div>
+
+  <!-- SECTION 4: Predictive Parity -->
+  <div class="metric-section">
+    <div class="metric-header">
+      <h2 class="metric-title">4. Predictive Parity</h2>
+      <p class="metric-question">"When we predict positive, are we equally accurate for both groups?"</p>
+
+      <div class="scenario-box" style="background: #fff3e0; margin-bottom: 15px;">
+        <strong>The Real-World Problem:</strong><br>
+        When the AI says "positive" for a Group A patient, it's correct 80% of the time. For Group B, only 60%. This means a positive result is <em>less trustworthy</em> for Group B patients — they're more likely to experience false alarms and unnecessary anxiety.
+      </div>
+
+      <div class="metric-instruction">
+        <strong>What you're simulating:</strong> The slider controls Positive Predictive Value (PPV) — of all patients flagged "positive," what percentage actually have the disease? This metric asks: does a positive prediction <em>mean the same thing</em> for both groups?
+      </div>
+    </div>
+
+    <div class="groups-row">
+      <div class="group-container">
+        <div class="group-label group-a-label">Group A</div>
+        <div class="matrix">
+          <div class="matrix-corner"></div>
+          <div class="matrix-header">AI said:<br>Positive</div>
+          <div class="matrix-header">AI said:<br>Negative</div>
+          <div class="matrix-row-label">Has<br>disease</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="pp-tp-a">80</div>
+            <div class="cell-label">TP</div>
+          </div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">FN</div>
+          </div>
+          <div class="matrix-row-label">Healthy</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="pp-fp-a">20</div>
+            <div class="cell-label">FP</div>
+          </div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">TN</div>
+          </div>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label-text">PPV:</span>
+          <input type="range" id="pp-slider-a" min="50" max="95" value="80" oninput="updatePP()">
+          <span class="slider-value" id="pp-val-a">80%</span>
+        </div>
+      </div>
+
+      <div class="group-container">
+        <div class="group-label group-b-label">Group B</div>
+        <div class="matrix">
+          <div class="matrix-corner"></div>
+          <div class="matrix-header">AI said:<br>Positive</div>
+          <div class="matrix-header">AI said:<br>Negative</div>
+          <div class="matrix-row-label">Has<br>disease</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="pp-tp-b">60</div>
+            <div class="cell-label">TP</div>
+          </div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">FN</div>
+          </div>
+          <div class="matrix-row-label">Healthy</div>
+          <div class="matrix-cell cell-highlighted">
+            <div class="cell-value" id="pp-fp-b">40</div>
+            <div class="cell-label">FP</div>
+          </div>
+          <div class="matrix-cell cell-muted">
+            <div class="cell-value">-</div>
+            <div class="cell-label">TN</div>
+          </div>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label-text">PPV:</span>
+          <input type="range" id="pp-slider-b" min="50" max="95" value="60" oninput="updatePP()">
+          <span class="slider-value" id="pp-val-b">60%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="formula-row">
+      <div class="formula-box">
+        PPV = TP / (TP + FP)<br>
+        <span id="pp-formula-a">= 80 / 100</span><br>
+        <span class="formula-result group-a" id="pp-result-a">= 80%</span>
+      </div>
+      <div class="formula-box">
+        PPV = TP / (TP + FP)<br>
+        <span id="pp-formula-b">= 60 / 100</span><br>
+        <span class="formula-result group-b" id="pp-result-b">= 60%</span>
+      </div>
+    </div>
+
+    <div class="result-box unfair" id="pp-result-box">
+      <div class="result-label">Difference in Positive Predictive Value</div>
+      <div class="result-value unfair" id="pp-diff">20%</div>
+      <div class="result-status" id="pp-status">Unfair (>10% difference)</div>
+    </div>
+
+    <div class="insight-box" id="pp-insight">
+      When the AI says "positive" for Group A, it's correct 80% of the time. For Group B, only 60%. This means a positive prediction is less trustworthy for Group B patients.
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-section">
+    <h2>Key Takeaway</h2>
+    <div class="key-point">
+      <strong>These metrics measure different things and can conflict.</strong> A model can be "fair" by one metric and "unfair" by another. There's no single definition of fairness - the right metric depends on what matters most in your specific healthcare context.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Helper function to update result box styling
+  function updateResultBox(boxId, diff, diffId, statusId) {
+    const box = document.getElementById(boxId);
+    const diffEl = document.getElementById(diffId);
+    const statusEl = document.getElementById(statusId);
+
+    diffEl.textContent = Math.round(diff) + '%';
+
+    if (diff < 10) {
+      box.className = 'result-box fair';
+      diffEl.className = 'result-value fair';
+      statusEl.textContent = 'Fair (<10% difference)';
+    } else if (diff < 20) {
+      box.className = 'result-box warning';
+      diffEl.className = 'result-value warning';
+      statusEl.textContent = 'Borderline (10-20% difference)';
+    } else {
+      box.className = 'result-box unfair';
+      diffEl.className = 'result-value unfair';
+      statusEl.textContent = 'Unfair (>10% difference)';
+    }
+  }
+
+  // Equal Opportunity
+  function updateEO() {
+    const tprA = parseInt(document.getElementById('eo-slider-a').value);
+    const tprB = parseInt(document.getElementById('eo-slider-b').value);
+
+    document.getElementById('eo-val-a').textContent = tprA + '%';
+    document.getElementById('eo-val-b').textContent = tprB + '%';
+
+    document.getElementById('eo-tp-a').textContent = tprA;
+    document.getElementById('eo-fn-a').textContent = 100 - tprA;
+    document.getElementById('eo-tp-b').textContent = tprB;
+    document.getElementById('eo-fn-b').textContent = 100 - tprB;
+
+    document.getElementById('eo-formula-a').textContent = '= ' + tprA + ' / 100';
+    document.getElementById('eo-formula-b').textContent = '= ' + tprB + ' / 100';
+    document.getElementById('eo-result-a').textContent = '= ' + tprA + '%';
+    document.getElementById('eo-result-b').textContent = '= ' + tprB + '%';
+
+    const diff = Math.abs(tprA - tprB);
+    updateResultBox('eo-result-box', diff, 'eo-diff', 'eo-status');
+
+    // Update insight
+    const insight = document.getElementById('eo-insight');
+    if (diff < 10) {
+      insight.textContent = 'Both groups have similar detection rates. Patients with disease are equally likely to be correctly diagnosed regardless of group.';
+    } else {
+      const lower = tprA < tprB ? 'A' : 'B';
+      insight.textContent = `Group ${lower} patients who actually have the disease are ${diff}% less likely to be correctly diagnosed. This means more missed diagnoses for Group ${lower}.`;
+    }
+  }
+
+  // Equalized Odds
+  function updateEQO() {
+    const tprA = parseInt(document.getElementById('eqo-tpr-a').value);
+    const tprB = parseInt(document.getElementById('eqo-tpr-b').value);
+    const fprA = parseInt(document.getElementById('eqo-fpr-a').value);
+    const fprB = parseInt(document.getElementById('eqo-fpr-b').value);
+
+    document.getElementById('eqo-tpr-val-a').textContent = tprA + '%';
+    document.getElementById('eqo-tpr-val-b').textContent = tprB + '%';
+    document.getElementById('eqo-fpr-val-a').textContent = fprA + '%';
+    document.getElementById('eqo-fpr-val-b').textContent = fprB + '%';
+
+    document.getElementById('eqo-tp-a').textContent = tprA;
+    document.getElementById('eqo-fn-a').textContent = 100 - tprA;
+    document.getElementById('eqo-tp-b').textContent = tprB;
+    document.getElementById('eqo-fn-b').textContent = 100 - tprB;
+    document.getElementById('eqo-fp-a').textContent = fprA;
+    document.getElementById('eqo-tn-a').textContent = 100 - fprA;
+    document.getElementById('eqo-fp-b').textContent = fprB;
+    document.getElementById('eqo-tn-b').textContent = 100 - fprB;
+
+    document.getElementById('eqo-tpr-a-val').textContent = tprA;
+    document.getElementById('eqo-tpr-b-val').textContent = tprB;
+    document.getElementById('eqo-fpr-a-val').textContent = fprA;
+    document.getElementById('eqo-fpr-b-val').textContent = fprB;
+
+    const tprDiff = Math.abs(tprA - tprB);
+    const fprDiff = Math.abs(fprA - fprB);
+    document.getElementById('eqo-tpr-diff').textContent = tprDiff + '%';
+    document.getElementById('eqo-fpr-diff').textContent = fprDiff + '%';
+
+    const maxDiff = Math.max(tprDiff, fprDiff);
+    updateResultBox('eqo-result-box', maxDiff, 'eqo-diff', 'eqo-status');
+
+    // Update insight
+    const insight = document.getElementById('eqo-insight');
+    if (maxDiff < 10) {
+      insight.textContent = 'Both detection rates (TPR) and false alarm rates (FPR) are similar across groups. The model treats both groups equitably in terms of all error types.';
+    } else if (tprDiff >= fprDiff) {
+      insight.textContent = `The main issue is unequal detection rates - Group ${tprA < tprB ? 'A' : 'B'} has ${tprDiff}% worse disease detection. Equalized Odds requires BOTH TPR and FPR to be equal.`;
+    } else {
+      insight.textContent = `The main issue is unequal false alarm rates - Group ${fprA > fprB ? 'A' : 'B'} gets ${fprDiff}% more false positives. Equalized Odds requires BOTH TPR and FPR to be equal.`;
+    }
+  }
+
+  // Statistical Parity
+  function updateSP() {
+    const rateA = parseInt(document.getElementById('sp-slider-a').value);
+    const rateB = parseInt(document.getElementById('sp-slider-b').value);
+
+    document.getElementById('sp-val-a').textContent = rateA + '%';
+    document.getElementById('sp-val-b').textContent = rateB + '%';
+
+    // For simplicity, split the predicted positives between TP and FP
+    const tpA = Math.round(rateA * 0.83); // ~83% are true positives
+    const fpA = rateA - tpA;
+    const tpB = Math.round(rateB * 0.5); // Group B has worse precision
+    const fpB = rateB - tpB;
+
+    document.getElementById('sp-tp-a').textContent = tpA;
+    document.getElementById('sp-fp-a').textContent = fpA;
+    document.getElementById('sp-tp-b').textContent = tpB;
+    document.getElementById('sp-fp-b').textContent = fpB;
+
+    document.getElementById('sp-formula-a').textContent = '= (' + tpA + ' + ' + fpA + ') / 100';
+    document.getElementById('sp-formula-b').textContent = '= (' + tpB + ' + ' + fpB + ') / 100';
+    document.getElementById('sp-result-a').textContent = '= ' + rateA + '%';
+    document.getElementById('sp-result-b').textContent = '= ' + rateB + '%';
+
+    const diff = Math.abs(rateA - rateB);
+    updateResultBox('sp-result-box', diff, 'sp-diff', 'sp-status');
+
+    // Update insight
+    const insight = document.getElementById('sp-insight');
+    if (diff < 10) {
+      const tpAVal = Math.round(rateA * 0.83);
+      const fpAVal = rateA - tpAVal;
+      const tpBVal = Math.round(rateB * 0.5);
+      const fpBVal = rateB - tpBVal;
+      insight.textContent = `Both groups get flagged at similar rates. But look at the breakdown - Group A has mostly true positives (${tpAVal} TP, ${fpAVal} FP), while Group B has more false alarms (${tpBVal} TP, ${fpBVal} FP). Statistical parity only cares about the total rate, not accuracy!`;
+    } else {
+      const higher = rateA > rateB ? 'A' : 'B';
+      insight.textContent = `Group ${higher} gets flagged ${diff}% more often. This could indicate bias, or it could reflect actual differences in disease rates. Statistical parity doesn't distinguish between these.`;
+    }
+  }
+
+  // Predictive Parity
+  function updatePP() {
+    const ppvA = parseInt(document.getElementById('pp-slider-a').value);
+    const ppvB = parseInt(document.getElementById('pp-slider-b').value);
+
+    document.getElementById('pp-val-a').textContent = ppvA + '%';
+    document.getElementById('pp-val-b').textContent = ppvB + '%';
+
+    document.getElementById('pp-tp-a').textContent = ppvA;
+    document.getElementById('pp-fp-a').textContent = 100 - ppvA;
+    document.getElementById('pp-tp-b').textContent = ppvB;
+    document.getElementById('pp-fp-b').textContent = 100 - ppvB;
+
+    document.getElementById('pp-formula-a').textContent = '= ' + ppvA + ' / 100';
+    document.getElementById('pp-formula-b').textContent = '= ' + ppvB + ' / 100';
+    document.getElementById('pp-result-a').textContent = '= ' + ppvA + '%';
+    document.getElementById('pp-result-b').textContent = '= ' + ppvB + '%';
+
+    const diff = Math.abs(ppvA - ppvB);
+    updateResultBox('pp-result-box', diff, 'pp-diff', 'pp-status');
+
+    // Update insight
+    const insight = document.getElementById('pp-insight');
+    if (diff < 10) {
+      insight.textContent = 'When the AI predicts positive, it\'s equally reliable for both groups. A positive result means the same thing regardless of which group the patient belongs to.';
+    } else {
+      const lower = ppvA < ppvB ? 'A' : 'B';
+      insight.textContent = `When the AI says "positive" for Group ${lower}, it's ${diff}% less likely to be correct. Positive predictions are less trustworthy for Group ${lower} patients.`;
+    }
+  }
+
+  // Initialize all sections
+  updateEO();
+  updateEQO();
+  updateSP();
+  updatePP();
+</script>
+
+</body>
+</html>
